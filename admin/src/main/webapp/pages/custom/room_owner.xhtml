@@ -1,0 +1,121 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	template="#{layoutMB.template}">
+
+
+	<ui:define name="title">
+        Duyệt bài đăng
+    </ui:define>
+
+	<ui:define name="description">
+		<style>
+.emptybox {
+	width: 100%;
+	height: 10px;
+}
+</style>
+		<h:form id="form">
+			<div class="container">
+				<div class="emptybox"></div>
+				<div class="row">
+					<div id="datatable" class="mt-2">
+						<p:dataTable var="roomOwner"
+							value="#{roomOwnerController.lstRoomOwner}"
+							selection="#{roomOwnerController.selectedItem}"
+							styleClass="header-right" widgetVar="userTable" paginator="true"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="5,10,15" rows="10"
+							rowKey="#{roomOwner.idRoomOwner}">
+							<p:column width="5%" selectionMode="single"
+								styleClass="align-center" priority="1" />
+
+							<p:column headerText="Mã bài" width="5%">
+								<h:outputText value="#{roomOwner.idRoomOwner}" />
+							</p:column>
+							<p:column headerText="Mã người dùng" width="10%">
+								<h:outputText value="#{roomOwner.idUser}" />
+							</p:column>
+							<p:column headerText="Tài khoản">
+								<h:outputText value="#{roomOwner.account.username}" />
+							</p:column>
+							<p:column headerText="Bài đăng">
+								<h:outputLink
+									value="http://localhost:8080/shared.accommodation/room.xhtml?id=#{roomOwner.idRoomOwner}">
+										Tới bài đăng
+								</h:outputLink>
+							</p:column>
+							<p:column headerText="Trạng thái" width="*">
+								<h:outputText
+									value="#{roomOwner.status == 1 ? 'Hiệu lực' : 'Khóa'}" />
+							</p:column>
+						</p:dataTable>
+					</div>
+				</div>
+				<div class="emptybox"></div>
+				<div class="emptybox"></div>
+				<div class="row">
+					<div class="col-md-3"></div>
+					<div class="col-md-2">
+						<p:commandButton value="Mở bài đăng"
+							styleClass="btn-block btn-success" update="form"
+							action="#{roomOwnerController.unLock}"></p:commandButton>
+					</div>
+					<div class="col-md-2">
+						<p:commandButton value="Nhắn tin"
+							action="#{roomOwnerController.openInbox}"
+							styleClass="btn-block btn-info" update="form,receiverPnl"></p:commandButton>
+					</div>
+					<div class="col-md-2">
+						<p:commandButton value="đóng bài đăng"
+							styleClass="btn-block btn-danger"
+							action="#{roomOwnerController.lock}" update="form"></p:commandButton>
+					</div>
+					<div class="col-md-3"></div>
+				</div>
+			</div>
+			<div class="emptybox"></div>
+			<h:panelGroup id="receiverPnl" style="display : none">
+				<div class="row">
+					<h:inputText a:id="receiverId" value="#{roomOwnerController.receiver.idUser}"></h:inputText>
+					<h:inputText a:id="receiverFirstName" value="#{roomOwnerController.receiver.firstName}"></h:inputText>
+					<h:inputText a:id="receiverLastName" value="#{roomOwnerController.receiver.lastName}"></h:inputText>
+					<h:inputText a:id="receiverAvatar" value="#{roomOwnerController.receiver.avatar.fileName}"></h:inputText>
+				</div>
+			</h:panelGroup>
+		</h:form>
+		<script>
+			function openInbox(){				      	
+		      	      			      							
+				var receiverId = $("#receiverId").val();
+				var receiverName = $("#receiverFirstName").val() + ' ' + $("#receiverLastName").val();
+				var receiverAvatar = $("#receiverAvatar").val();				
+							      					      					      				      	      
+				var me = window.talkSession.me; 																     	   	   
+	     	        var other = new Talk.User({
+	     	            id: receiverId,
+	     	            name: receiverName,		      	            
+	     	          	photoUrl: "/shared.accommodation/images/1/" + receiverAvatar,
+	     	            welcomeMessage: "chào bạn"
+	     	        });
+	
+	     	      	var conversation = talkSession.getOrCreateConversation(Talk.oneOnOneId(me, other));
+		      	    conversation.setParticipant(me);
+		      	    conversation.setParticipant(other);
+		      	    var popup = window.talkSession.createPopup(conversation, { keepOpen: false });
+		      	    popup.mount({ show: false });
+		      	 	popup.show();		      	 				    
+	     	};
+			</script>
+	</ui:define>
+
+	<ui:define name="body">
+		<adm:breadcrumb title="User" />
+		<!-- code here -->
+	</ui:define>
+
+</ui:composition>

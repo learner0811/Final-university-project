@@ -1,0 +1,20 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+<ui:composition template="template/template.xhtml">
+	<ui:define name="body">				
+		<!-- container element in which TalkJS will display a chat UI -->
+		<h:outputText value="#{messageController.test}"></h:outputText>
+		<div id="talkjs-container"
+			style="width: 90%; margin: 30px; height: 500px">
+			<i>Loading chat...</i>
+		</div>
+
+	</ui:define>
+</ui:composition>
+</html>

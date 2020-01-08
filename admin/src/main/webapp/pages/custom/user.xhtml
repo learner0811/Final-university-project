@@ -1,0 +1,95 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	template="#{layoutMB.template}">
+
+
+	<ui:param name="skin" value="skin-red" />
+
+
+	<ui:define name="title">
+        Quản lý người dùng
+    </ui:define>
+
+	<ui:define name="description">
+		<style>
+.emptybox {
+	width: 100%;
+	height: 10px;
+}
+</style>
+		<h:form id="form">
+			<div class="container">
+				<div class="emptybox"></div>
+				<div class="row">
+					<div id="datatable" class="mt-2">
+						<p:dataTable var="user" value="#{userController.lstUser}"
+							selection="#{userController.selectedUser}"
+							styleClass="header-right" widgetVar="userTable" paginator="true"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="5,10,15" rows="10" rowKey="#{user.idUser}"
+							filteredValue="#{userController.lstFilteredUser}">
+
+							<p:column width="5%" selectionMode="single"
+								styleClass="align-center" priority="1" />
+
+							<p:column headerText="Mã">
+								<h:outputText value="#{user.idUser}" />
+							</p:column>
+							<p:column headerText="Họ">
+								<h:outputText value="#{user.lastName}" />
+							</p:column>
+							<p:column headerText="Tên">
+								<h:outputText value="#{user.firstName}" />
+							</p:column>
+							<p:column headerText="Tài khoản">
+								<h:outputText value="#{user.account.username}" />
+							</p:column>
+							<p:column headerText="Bài đăng">
+								<h:panelGroup rendered="#{user.type == 1}">
+									<h:outputLink 										
+										value="http://localhost:8080/shared.accommodation/room.xhtml?id=#{user.dataId}">
+										Tới bài đăng
+									</h:outputLink >
+								</h:panelGroup>
+								<h:panelGroup rendered="#{user.type == 2}">
+									<h:outputLink 										
+										value="http://localhost:8080/shared.accommodation/tenant.xhtml?id=#{user.dataId}">
+										Tới bài đăng
+									</h:outputLink >
+								</h:panelGroup>
+							</p:column>
+							<p:column headerText="Trạng thái">
+								<h:outputText value="#{user.status == 1 ? 'Hiệu lực' : 'Khóa'}" />
+							</p:column>
+						</p:dataTable>
+					</div>
+				</div>
+				<div class="emptybox"></div>
+				<div class="emptybox"></div>
+				<div class="row">
+					<div class="col-md-4"></div>
+					<div class="col-md-2">
+						<p:commandButton value="Mở tài khoản"
+							styleClass="btn-block btn-success"
+							action="#{userController.unLockAccount}" update="form"></p:commandButton>
+					</div>
+					<div class="col-md-2">
+						<p:commandButton value="Khóa tài khoản"
+							styleClass="btn-block btn-danger"
+							action="#{userController.lockAccount}" update="form"></p:commandButton>
+					</div>
+					<div class="col-md-4"></div>
+				</div>
+			</div>
+		</h:form>
+	</ui:define>
+
+	<ui:define name="body">
+		<adm:breadcrumb title="User" />
+		<!-- code here -->
+	</ui:define>
+
+</ui:composition>

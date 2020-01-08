@@ -1,0 +1,48 @@
+@charset "UTF-8";
+
+.sa-washing-machine:before{
+	content: "";    
+    background: url('#{resource['image/washing-machine.png']}') no-repeat;
+    width: 20px;
+    height: 16px;    
+    left: 0;
+    display: inline-block;
+}
+
+.sa-fridge:before{
+	content: "";    
+    background: url('#{resource['image/fridge.png']}') no-repeat;
+    width: 20px;
+    height: 16px;    
+    left: 0;
+    display: inline-block;
+}
+
+.sa-cooking:before{
+	content: "";    
+    background: url('#{resource['image/cooking.png']}') no-repeat;
+    width: 20px;
+    height: 16px;    
+    left: 0;
+    display: inline-block;
+}
+
+.sa-water-heater:before{
+	content: "";    
+    background: url('#{resource['image/water-heater.png']}') no-repeat;
+    width: 16px;
+    height: 16px;    
+    left: 0;
+    display: inline-block;
+}
+
+.sa-star:before{
+	content: "";    
+    background: url('#{resource['image/star.png']}') no-repeat;
+    width: 16px;
+    height: 16px;    
+    left: 0;
+    display: inline-block;
+}
+
+

@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+
+<h:head>
+	<h:outputStylesheet
+		name="common/bootstrap/css/bootstrap-datepicker.css"></h:outputStylesheet>
+	<h:outputStylesheet name="common/bootstrap/css/bootstrap.min.css"></h:outputStylesheet>
+	<!-- <h:outputStylesheet library="webjars" name="font-awesome/5.11.2/css/font-awesome-jsf.css" /> -->
+	<h:outputStylesheet library="webjars"
+		name="font-awesome/5.11.2/css/all.min-jsf.css" />
+	<h:outputStylesheet name="css/stylesheet/style.css"></h:outputStylesheet>
+	<h:outputStylesheet name="css/stylesheet/icon.css"></h:outputStylesheet>
+
+	<!--  <h:outputScript name="common/bootstrap/js/jquery-3.4.1.min.js" language="JavaScript"></h:outputScript>-->
+	<h:outputScript name="common/bootstrap/js/popper.min.js"></h:outputScript>
+	<h:outputScript name="common/bootstrap/js/bootstrap.min.js"></h:outputScript>
+	<h:outputScript name="common/bootstrap/js/bootstrap-datepicker.js"></h:outputScript>
+</h:head>
+<h:body>
+	<!-- <div class="container-fluid"> -->
+	<ui:insert name="header">
+		<ui:include src="header.xhtml" />
+	</ui:insert>
+
+	<ui:insert name="body">
+		<ui:include src="body.xhtml" />
+	</ui:insert>
+
+
+	<ui:include src="/inbox.xhtml" />
+	<ui:include src="footer.xhtml" />
+	<!-- </div>	 -->
+</h:body>
+</html>

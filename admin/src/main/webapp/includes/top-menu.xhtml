@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ul class="nav navbar-nav">
+        <li class="messages-menu">
+            <a href="#{request.contextPath}/pages/custom/message.xhtml">
+                <i class="fa fa-envelope-o"></i>
+                <span class="label label-success" id="notifier-badge"></span>
+            </a>            
+        </li>
+        <!-- <li class="dropdown notifications-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                <i class="fa fa-bell-o"></i>
+                <span class="label label-warning">2</span>
+            </a>
+            <ul class="dropdown-menu">
+                <li class="header align-center">You have 2 notifications.</li>
+                <li>
+                    inner menu: contains the actual data
+                    <ul class="menu">
+                        <li>
+                            Notification 1
+                        </li>
+
+                        <li>
+                            Notification 2
+                        </li>
+                    </ul>
+                </li>
+                <li class="footer"><a href="#">See all notifications</a></li>
+            </ul>
+        </li> -->
+        <li class="dropdown user user-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <pe:gravatar id="userImage"
+                             value="nonexisting"/>
+                <span class="hidden-xs">Admin</span>
+            </a>
+            <ul class="dropdown-menu">
+                <li class="user-header">
+                    <div class="hidden-xs">
+                        <!-- <pe:gravatar style="border-radius: 50%"
+                                     value="rmpestano@gmail.com"/> -->
+                    </div>
+                    <p>
+                        Admin                        
+                    </p>
+                </li>
+                <li class="user-footer">
+                    <h:form prependId="false">
+                        <div class="pull-left">
+                            <p:commandLink  styleClass="btn btn-danger"  value="Change password"/>
+                        </div>
+                        <div class="pull-right">
+                            <p:commandLink id="logout" action="#{logoutMB.doLogout}"  title="Logoff">
+                                <i class="fa fa-sign-out fa-2x"></i>
+                            </p:commandLink>
+                        </div>
+                    </h:form>
+                </li>
+            </ul>
+        </li>
+
+        <li>
+            <a href="#" id="layout-setup" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+        </li>
+
+    </ul>
+	
+	<script>	
+		(function(t,a,l,k,j,s){
+		s=a.createElement('script');s.async=1;s.src="https://cdn.talkjs.com/talk.js";a.head.appendChild(s)
+		;k=t.Promise;t.Talk={v:2,ready:{then:function(f){if(k)return new k(function(r,e){l.push([f,r,e])});l
+		.push([f])},catch:function(){return kamp;amp;new k()},c:l}};})(window,document,[]);	
+	</script>
+	
+	<script>	
+		$( document ).ready(function() {
+			createTalkSession();				
+		});
+		
+		function createTalkSession(){
+	  		Talk.ready.then(function() {					      				
+				 
+	  	        var me = new Talk.User({
+	  	            id: 3,
+	  	            name: 'Admin',		      	            
+	  	            //photoUrl: "/shared.accommodation/images/1/" + myavatar,
+	  	            welcomeMessage: "Hey there! How are you? :-)"
+	  	        });
+	  	        window.talkSession = new Talk.Session({
+	  	            appId: "tQPdj4KX",
+	  	            me: me
+	  	        });
+	  	       	       
+	
+	  	      	window.talkSession.unreads.on("change", function(conversationIds) {
+				    var amountOfUnreads = conversationIds.length;
+				    // update the text and hide the badge if there are
+				    // no unreads.
+				    $("#notifier-badge")
+				        .text(amountOfUnreads)
+				        .toggle(amountOfUnreads > 0); 
+					    			    
+				});
+	
+				if (window.location.href.includes('message.xhtml')){
+					var inbox = window.talkSession.createInbox();
+			    	inbox.mount(document.getElementById("talkjs-container"));
+				}
+	  		});
+		};
+	</script>
+
+
+</ui:composition>

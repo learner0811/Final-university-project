@@ -1,0 +1,457 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+</h:head>
+<body>
+	<ui:composition template="template/template.xhtml">
+		<ui:define name="body">			
+			<h:form id="room-owner">
+				<p:growl id="growl" showDetail="true" sticky="true" />
+
+				<div class="container-fluid">
+					<div class="row title-container">
+						<h:inputHidden
+							value="#{roomOwnerController.roomOwner.room.address.latitude}"
+							a:id="latitude" />
+						<h:inputHidden
+							value="#{roomOwnerController.roomOwner.room.address.longitude}"
+							a:id="longitude" />
+						<div class="col-md-12" style="padding: 20px 40px;">
+
+							<h3 style="display: inline;">
+								<h:outputText
+									value="#{roomOwnerController.roomOwner.room.title}"></h:outputText>
+							</h3>
+							<h:panelGroup id="pnlRating">
+								<i class="sa-star">&nbsp; <h:outputText
+										value="#{roomOwnerController.strRatingTotal}"></h:outputText>
+								</i>
+								<p:rating value="#{roomOwnerController.ratingDto}"
+									cancel="false" styleClass="ml-5"
+									style="display: inline; font-size: 1rem;">
+									<p:ajax event="rate" listener="#{roomOwnerController.onrate}"
+										update="growl, pnlRating" />
+								</p:rating>
+							</h:panelGroup>
+							<div class="emptybox"></div>
+							<div class="emptybox"></div>
+							<div class="row">
+								<div class="col-md-2">
+									<i class="far fa-money-bill-alt"></i> Giá thuê :
+									<h:outputText
+										value="#{roomOwnerController.roomOwner.room.rent}">
+										<f:convertNumber pattern="¤#,##0" currencySymbol="" />
+									</h:outputText>
+									<h:outputText value=" ₫"></h:outputText>
+								</div>
+								<div class="col-md-3">
+									<i class="fas fa-calendar-week"></i> Ngày chuyên tới :
+									<h:outputText
+										value="#{roomOwnerController.roomOwner.room.movingDate}">
+										<f:convertDateTime pattern="dd-MM-yyyy" />
+									</h:outputText>
+								</div>
+								<div class="col-md-3">
+									<i class="far fa-clock"></i> Thời gian ở :
+									<h:outputText
+										value="#{roomOwnerController.roomOwner.room.period}"></h:outputText>
+								</div>
+								<div class="col-md-2">
+									<i class="far fa-square"></i> Diện tích :
+									<h:outputText
+										value="#{roomOwnerController.roomOwner.room.square}"></h:outputText>
+								</div>
+								<div class="col-md-2">
+									<i class="far fa-building"></i> Thành phố :
+									<h:outputText
+										value="#{roomOwnerController.roomOwner.room.address.city}"></h:outputText>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="emptybox5"></div>
+					<div class="row">
+						<div class="col-md-8">
+							<div class="row">
+								<div class="col-md-12">
+									<h4>Ảnh phòng cho thuê</h4>
+									<div id="gallery" style="display: none;">
+										<ui:repeat var="image"
+											value="#{roomOwnerController.roomOwner.room.images}">
+											<a href="http://unitegallery.net"> <img alt=""
+												src="#{request.contextPath}/images/2/#{image.fileName}"
+												data-image="#{request.contextPath}/images/2/#{image.fileName}"
+												data-image-mobile="#{request.contextPath}/images/2/#{image.fileName}"
+												data-thumb-mobile="#{request.contextPath}/images/2/#{image.fileName}"
+												data-description="This is a Lemon Slice"
+												style="display: none"></img>
+											</a>
+										</ui:repeat>
+									</div>
+								</div>
+							</div>
+							<div class="emptybox5"></div>
+							<div class="row">
+								<div class="col-md-12 table-content">
+									<h4>Thông tin phòng</h4>
+									<table>
+										<tr>
+											<td>Địa chỉ</td>
+											<td colspan="4" align="right"><h:outputText rendered="#{roomOwnerController.roomOwner.room.address.number != 0}"
+													value="Số #{roomOwnerController.roomOwner.room.address.number}"></h:outputText>
+												<h:outputText value="&#160;"></h:outputText> <h:outputText
+													value="#{roomOwnerController.roomOwner.room.address.street}"></h:outputText>
+												<h:outputText value="&#160;"></h:outputText> <h:outputText
+													value="#{roomOwnerController.roomOwner.room.address.district}"></h:outputText>
+												<h:outputText value="&#160;"></h:outputText> <h:outputText
+													value="#{roomOwnerController.roomOwner.room.address.city}"></h:outputText>
+											</td>
+										</tr>
+										<tr>
+											<td width="20%">Giá</td>
+											<td width="20%"><h:outputText
+													value="#{roomOwnerController.roomOwner.room.rent}">
+														<f:convertNumber pattern="¤#,##0" currencySymbol="" />
+													</h:outputText>
+													<h:outputText value=" ₫"></h:outputText>
+											</td>
+											<td width="*" class="space"></td>
+											<td width="20%">Diện tích</td>
+											<td width="20%"><h:outputText
+													value="#{roomOwnerController.roomOwner.room.square} m2"></h:outputText>
+											</td>
+										</tr>
+										<tr>
+											<td width="20%">Ngày chuyển tới</td>
+											<td width="20%"><h:outputText
+													value="#{roomOwnerController.roomOwner.room.movingDate}">
+													<f:convertDateTime pattern="dd-MM-yyyy" />
+												</h:outputText></td>
+											<td class="space" width="*"></td>
+											<td width="20%">Thời gian ở</td>
+											<td width="20%"><h:outputText
+													value="#{roomOwnerController.roomOwner.room.period}"></h:outputText>
+											</td>
+										</tr>
+										<h:panelGroup rendered="#{roomOwnerController.type}">
+											<tr>
+												<td width="20%">Số lượng phòng</td>
+												<td width="20%"><h:outputText
+														value="#{roomOwnerController.landlord.available}/#{roomOwnerController.landlord.roomNumber}">
+														<f:convertDateTime pattern="dd-mm-yyyy" />
+													</h:outputText></td>																								
+											</tr>
+										</h:panelGroup>
+									</table>
+								</div>
+							</div>
+							<div class="emptybox5"></div>
+							<div class="row">
+								<div class="col-md-12">
+									<h4>Mô tả</h4>
+									<p>
+										<h:outputText
+											value="#{roomOwnerController.roomOwner.room.description}"></h:outputText>
+									</p>
+								</div>
+							</div>
+							<div class="emptybox5"></div>
+							<div class="row">
+								<div class="col-md-12">
+									<h4>Cơ sở vật chất</h4>
+									<div class="row">
+										<ui:repeat var="facility"
+											value="#{roomOwnerController.facilites}">
+											<div class="col-md-4">
+												<i class="#{facility.icon}"></i>
+												<h:outputText value="&#160;"></h:outputText>
+												<span
+													class="#{facility.display ? 'badge badge-success' : 'badge badge-danger'}">
+													<h:outputText value="#{facility.name}"></h:outputText>
+												</span>
+											</div>
+										</ui:repeat>
+									</div>
+								</div>
+							</div>
+							<div class="emptybox5"></div>
+							<h:panelGroup rendered="#{!roomOwnerController.type}">
+							<div class="row">
+								<div class="col-md-12 table-content">
+									<h4>Tiêu chí bạn cùng phòng</h4>
+									<table>
+										<tr>
+											<td width="20%">Giới tính</td>
+											<td width="20%"><h:outputText
+													rendered="#{roomOwnerController.roomOwner.roommateCriteria.gender == 2}"
+													value="Không yêu cầu"></h:outputText> <h:outputText
+													rendered="#{roomOwnerController.roomOwner.roommateCriteria.gender == 1}"
+													value="Nữ"></h:outputText> <h:outputText
+													rendered="#{roomOwnerController.roomOwner.roommateCriteria.gender == 0}"
+													value="Nam"></h:outputText></td>
+											<td width="20%" class="space"></td>
+											<td width="20%">Có đi kèm trẻ em</td>
+											<td width="20%"><h:outputText
+													value="#{roomOwnerController.roomOwner.roommateCriteria.children == 0 ? 'Không' : 'Có'}"></h:outputText>
+											</td>
+										</tr>
+										<tr>
+											<td width="20%">Tuổi</td>
+											<td width="20%"><h:outputText
+													value="#{roomOwnerController.roomOwner.roommateCriteria.age.replace(',', '->')}"></h:outputText>
+											</td>
+											<td width="20%" class="space"></td>
+											<td width="20%">Sạch sẽ</td>
+											<td width="20%"><h:outputText
+													rendered="#{roomOwnerController.roomOwner.roommateCriteria.cleancliness == 0}"
+													value="Có"></h:outputText> <h:outputText
+													rendered="#{roomOwnerController.roomOwner.roommateCriteria.cleancliness == 1}"
+													value="Không"></h:outputText> <h:outputText
+													rendered="#{roomOwnerController.roomOwner.roommateCriteria.cleancliness == 2}"
+													value="Trung bình"></h:outputText></td>
+										</tr>
+										<tr>
+											<td width="20%">Hút thuốc</td>
+											<td width="20%"><h:outputText
+													value="#{roomOwnerController.roomOwner.roommateCriteria.smoker == 0 ? 'Không' : 'Có'}"></h:outputText>
+											</td>
+											<td width="20%" class="space"></td>
+											<td width="20%">Cho nuôi thú cưng</td>
+											<td width="20%"><h:outputText
+													value="#{roomOwnerController.roomOwner.roommateCriteria.petAllowed == 0 ? 'Không' : 'Có'}"></h:outputText>
+											</td>
+										</tr>
+										<tr>
+											<td width="20%">Tình trạng hôn nhân</td>
+											<td width="20%"><h:outputText
+													rendered="#{roomOwnerController.roomOwner.roommateCriteria.civil_status == 0}"
+													value="Không yêu cầu"></h:outputText> <h:outputText
+													rendered="#{roomOwnerController.roomOwner.roommateCriteria.civil_status == 1}"
+													value="Độc thân"></h:outputText> <h:outputText
+													rendered="#{roomOwnerController.roomOwner.roommateCriteria.civil_status == 2}"
+													value="Kết hôn"></h:outputText></td>
+											<td width="20%" class="space"></td>
+											<td width="20%"></td>
+											<td width="20%"></td>
+										</tr>
+									</table>
+								</div>
+							</div>
+							</h:panelGroup>
+						</div>
+						<div class="col-md-4">
+							<div class="card">
+								<div class="emptybox5"></div>
+								<h4 style="text-align: center;">Chủ phòng</h4>
+								<div class="profile-userpic">
+									<div class="emptybox5"></div>
+									<img class="card-img-top"
+										src="#{request.contextPath}/images/1/#{roomOwnerController.roomOwner.avatar.fileName}"
+										alt="Card image"></img>
+								</div>
+								<div class="card-body profile-info table-content">
+									<h4 class="card-title">
+										<h:outputText value="#{roomOwnerController.roomOwner.name}"></h:outputText>
+									</h4>
+									<table>
+										<tr>
+											<td></td>
+											<td></td>
+										</tr>
+										<tr>
+											<td width="50%" align="left">Tuổi</td>
+											<td><h:outputText
+													value="#{roomOwnerController.roomOwner.age}"></h:outputText>
+											</td>
+										</tr>
+										<tr>
+											<td width="50%" align="left">Giới tính</td>
+											<td><h:outputText
+													value="#{roomOwnerController.roomOwner.gender == 1 ? 'Nam' : 'Nữ'}"></h:outputText>
+											</td>
+										</tr>
+									</table>
+									<div class="emptybox5"></div>
+									<div id="collapseExample" class="collapse">
+										<div class="interest">
+											<i class="fas fa-tags"></i>&nbsp;Sở thích<br></br>
+											<ui:repeat var="interest"
+												value="#{roomOwnerController.roomOwner.interests.split(',')}">
+												<span class="badge badge-success"> <h:outputText
+														value="#{interest}"></h:outputText>
+												</span>
+											</ui:repeat>
+										</div>
+										<table>
+											<tr>
+												<td></td>
+												<td></td>
+											</tr>
+											<tr>
+												<td width="50%" align="left">Quê quán</td>
+												<td><h:outputText
+														value="#{roomOwnerController.roomOwner.strNative}"></h:outputText>
+												</td>
+											</tr>
+											<tr>
+												<td width="50%" align="left">Tình trạng hôn nhân</td>
+												<td><h:outputText
+														rendered="#{roomOwnerController.roomOwner.civilStatus == 0}"
+														value="Không yêu cầu"></h:outputText> <h:outputText
+														rendered="#{roomOwnerController.roomOwner.civilStatus == 1}"
+														value="Độc thân"></h:outputText> <h:outputText
+														rendered="#{roomOwnerController.roomOwner.civilStatus == 2}"
+														value="Kết hôn"></h:outputText></td>
+											</tr>
+											<tr>
+												<td width="50%" align="left">Hút thuốc</td>
+												<td><h:outputText
+														value="#{roomOwnerController.roomOwner.smoker == 1 ? 'Có' : 'Không'}"></h:outputText>
+												</td>
+											</tr>
+											<tr>
+												<td width="50%" align="left">Nghề nghiệp</td>
+												<td><h:outputText
+														value="#{roomOwnerController.roomOwner.ocupation}"></h:outputText>
+												</td>
+											</tr>
+											<tr>
+												<td width="50%" align="left">Số điện thoại</td>
+												<td><h:outputText
+														value="#{roomOwnerController.roomOwner.phone}"></h:outputText>
+												</td>
+											</tr>
+											<tr>
+												<td width="50%" align="left">Email</td>
+												<td><h:outputText
+														value="#{roomOwnerController.roomOwner.email}"></h:outputText>
+												</td>
+											</tr>
+										</table>
+									</div>
+									<div class="emptybox"></div>
+									<a id="collapse-btn" data-toggle="collapse"
+										href="#collapseExample" role="button" aria-expanded="false"
+										aria-controls="collapseExample"><i
+										class="fas fa-chevron-up"></i> Hiển thị thêm </a>
+								</div>
+								<div class="collapse" id="collapseExample">
+									<div class="profile-info"></div>
+								</div>
+								<div class="emptybox"></div>
+								<div class="profile-info">
+									<p:commandLink styleClass="btn btn-success"
+										action="#{roomOwnerController.openInbox}"
+										update="inbox-form:grid, growl">
+										<h:outputText value="Nhắn tin cho chủ phòng" />
+									</p:commandLink>
+									<h:panelGroup id="inboxPnl" style="display : none">																				
+										<!-- receiver -->
+										<h:inputText a:id="receiverId"
+											value="#{roomOwnerController.roomOwner.idUser}"></h:inputText>
+										<h:inputText a:id="receiverFirstName"
+											value="#{roomOwnerController.roomOwner.firstName}"></h:inputText>
+										<h:inputText a:id="receiverLastName"
+											value="#{roomOwnerController.roomOwner.lastName}"></h:inputText>
+										<h:inputText a:id="receiverAvatar"
+											value="#{roomOwnerController.roomOwner.avatar.fileName}"></h:inputText>
+										<p:autoUpdate />
+									</h:panelGroup>
+								</div>								
+								<div class="emptybox5"></div>
+							</div>
+							<div class="emptybox5"></div>
+							<div class="row">
+								<div class="col-md-12">
+									<h3>Đánh giá bài đăng</h3>
+									<div class="fb-comments" data-href="http://localhost:8080/shared.accommodationroom.xhtml?id=#{roomOwnerController.roomOwner.idRoomOwner}" data-width="500px" data-numposts="5"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="emptybox5"></div>
+					<div class="row">
+						<div id="map" style="height: 400px; width: 100%"></div>
+					</div>
+				</div>
+			</h:form>
+			<script>
+				$('#collapseExample').on('hidden.bs.collapse', function () {
+				  	$("#collapse-btn").text("Show more");				  					  	
+				})
+				
+				$('#collapseExample').on('shown.bs.collapse', function () {
+				  	$("#collapse-btn").text("Ẩn đi");
+				})
+				
+				$(document).ready(function(){
+					$("#gallery").unitegallery();		
+				});
+					
+			 	var map;
+		      	function initMap() {
+		      		var lat = $("#latitude").val();
+		        	var lng = $("#longitude").val();
+		        	var position = {lat : parseFloat(lat), lng : parseFloat(lng)};
+		        	
+		        	map = new google.maps.Map(document.getElementById('map'), {
+			          	center: {lat: position.lat, lng: position.lng},
+			          	zoom: 15,
+			          	mapTypeId: 'roadmap',
+			          	disableDefaultUI: true,
+			          	zoomControl: true,
+			          	zoomControlOptions: {
+			                position: google.maps.ControlPosition.LEFT_TOP
+			            },
+		        	});
+        	
+					console.log(position);
+		        	marker = new google.maps.Marker({
+		        	    map: map,		        	    		        	    
+		        	    position: position
+		        	  });
+		      	}
+
+		      	function openInbox(){				      	
+			      	console.log(window.talkSession);	      			      							
+					var receiverId = $("#receiverId").val();
+					var receiverName = $("#receiverFirstName").val() + ' ' + $("#receiverLastName").val();
+					var receiverAvatar = $("#receiverAvatar").val();
+								      					      					      				      	      
+					var me = window.talkSession.me; 																     	   	   
+	      	        var other = new Talk.User({
+	      	            id: receiverId,
+	      	            name: receiverName,		      	            
+	      	          	photoUrl: "/shared.accommodation/images/1/" + receiverAvatar,
+	      	            welcomeMessage: "Hey, how can I help?"
+	      	        });
+
+	      	      	var conversation = talkSession.getOrCreateConversation(Talk.oneOnOneId(me, other));
+		      	    conversation.setParticipant(me);
+		      	    conversation.setParticipant(other);
+		      	    var popup = window.talkSession.createPopup(conversation, { keepOpen: false });
+		      	    popup.mount({ show: false });
+		      	 	popup.show();
+			      	 				    	
+		     	};
+			</script>
+			<div id="fb-root"></div>
+			<script async="defer" defer="defer" crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&amp;version=v5.0&amp;appId=578333572692276&amp;autoLogAppEvents=1"></script>
+			<h:outputStylesheet name="css/stylesheet/detail-room.css"></h:outputStylesheet>
+			<h:outputStylesheet name="common/unitegallery/css/unite-gallery.css"></h:outputStylesheet>
+			<script
+				src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAvf54CFkOs8IYv9qn39jyBk3pTj7rMnCE&amp;callback=initMap"
+				async="true" defer="defer"></script>
+			<h:outputScript name="common/unitegallery/js/unitegallery.js"></h:outputScript>
+			<h:outputScript
+				name="common/unitegallery/themes/tilesgrid/ug-theme-tilesgrid.js"></h:outputScript>
+		</ui:define>
+	</ui:composition>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+
+<h:head>
+	<title>JSF Hello World</title>
+</h:head>
+<h:body>	
+	<ui:composition template="template/template.xhtml">
+		<ui:define name="body">
+			<style>
+				.text-item{
+					text-align: center;
+					font-size: 17px;
+    				vertical-align: middle;
+    				display: inline-block;
+    				color : #000000;
+				}
+				
+				.link-item{
+					text-decoration: none;
+				}
+				.link-item:hover{
+					text-decoration: none;
+				}
+			</style>
+			<f:metadata>
+			    <f:viewParam name="number" value="#{indexController.number}"/>
+			    <f:viewParam name="street" value="#{indexController.street}"/>
+			    <f:viewParam name="district" value="#{indexController.district}"/>
+			    <f:viewParam name="city" value="#{indexController.city}"/>
+			</f:metadata>
+			<h:form id="index">
+				<p:growl id="growl" showDetail="true" sticky="true" />				
+				<div class="container-fluid">
+					<div class="emptybox5"></div>
+					<div class="row">
+						<div class="col-md-8 offset-md-2">
+							<h1
+								style="font-size: 80px; line-height: 80px; margin-bottom: 30px; color: #505050;">
+								Tìm phòng trọ dễ dàng</h1>
+							<div class="emptybox"></div>
+							<input id="search-input"
+								placeholder="Nhập vào địa chỉ tìm kiếm"
+								class="form-control form-control-lg" />
+						</div>
+					</div>
+					<div class="emptybox5"></div>
+					<div class="row" style="display: none">
+						<h:inputText a:id="number" value="#{indexController.number}"></h:inputText> 
+						<h:inputText a:id="street" value="#{indexController.street}"></h:inputText> 
+						<h:inputText a:id="district" value="#{indexController.district}"></h:inputText> 
+						<h:inputText a:id="city" value="#{indexController.city}"></h:inputText>
+						<h:commandButton a:id="submit" value="Submit" action="search?faces-redirect=true&amp;includeViewParams=true"/>						
+					</div>					
+					<div class="row">
+						<div class="col-md-3">
+							<h:link outcome="search" styleClass="link-item"> 
+								<f:param name="city" value="Hà Nội"></f:param>
+								<img class="rounded"
+									src="http://localhost:8080/shared.accommodation/images/3/hanoi.jpg"
+									alt="" height="270px" width="300px"/>
+								<h3>Hà Nội</h3>								
+							</h:link>
+						</div>
+						<div class="col-md-3">
+							<h:link outcome="search" styleClass="link-item">
+								<f:param name="city" value="Hồ Chí Minh"></f:param> 
+								<img class="rounded"
+									src="http://localhost:8080/shared.accommodation/images/3/saigon.jpg"
+									alt="" height="270px" width="300px" />
+								<h3>Hồ Chí Minh</h3>
+							</h:link>
+						</div>
+						<div class="col-md-3">
+							<h:link outcome="search" styleClass="link-item"> 
+								<f:param name="city" value="Đà Nẵng"></f:param>
+								<img class="rounded"
+									src="http://localhost:8080/shared.accommodation/images/3/danang.jpg"
+									alt="" height="270px" width="300px"/>
+								<h3>Đà Nẵng</h3>
+							</h:link>
+						</div>
+						<div class="col-md-3">
+							<h:link outcome="search" styleClass="link-item">
+								<f:param name="city" value="Hải Phòng"></f:param> 
+								<img class="rounded"
+									src="http://localhost:8080/shared.accommodation/images/3/haiphong.jpg"
+									alt="" height="270px" width="300px"/>
+								<h3>Hải Phòng</h3>
+							</h:link>
+						</div>
+					</div>
+					<div class="row"
+						style="border-top: 1px solid #d4dadf; 
+						border-bottom: 1px solid #d4dadf; 
+						padding: 40px 0px;">
+						<div class="col-md-4" style="text-align: center;">												
+							<span class="text-item"><i class="fas fa-search-location"></i>&nbsp;Dễ dàng tìm kiếm</span>
+						</div>
+						<div class="col-md-4">							
+							<span class="text-item" style="text-align: center;"><i class="fas fa-share"></i>&nbsp;Dễ dàng chia sẻ</span>
+						</div>
+						<div class="col-md-4">							
+							<span class="text-item" style="text-align: center;"><i class="far fa-envelope"></i>&nbsp;Liên lạc qua hệ thống tin nhắn</span>							
+						</div>
+					</div>
+				</div>
+			</h:form>
+			<script type="text/javascript">
+				$(document).ready(function() {
+					$(window).keydown(function(event) {
+						/* if(event.target.id == 'search-input'){
+							$("#search-input").trigger('click');
+							console.log($("#search-input"));
+							return true;
+						} */
+						if (event.keyCode == 13) {
+							event.preventDefault();
+							return false;
+						}
+					});
+				});
+
+				var address = {
+					number : '',
+					street : '',
+					district : '',
+					city : ''
+				};
+
+				function initMap() {
+					var searchInput = document.getElementById('search-input');
+					var options = {
+						types : [ 'regions', 'address ', 'geocode' ]
+					};
+					var autocomplete = new google.maps.places.Autocomplete(
+							searchInput);
+					autocomplete.setComponentRestrictions({
+						'country' : 'VN'
+					});
+					autocomplete.addListener('place_changed',function() {
+						var place = autocomplete.getPlace();
+						if (!place.geometry) {
+							alert("No place");
+							return;
+						}															
+						
+						//reset address
+						$("#number").val('');
+						$("#street").val('');
+						$("#district").val('');
+						$("#city").val('');
+
+						//<![CDATA[	        			
+						var address_components = place.address_components;						
+						for (var i = 0; i < address_components.length; i++) {
+							if (address_components[i].types[0] == "street_number")
+								$("#number")
+										.val(
+												address_components[i].long_name);
+							else if (address_components[i].types[0] == "route")
+								$("#street")
+										.val(
+												address_components[i].long_name);
+							if (address_components[i].types[0] == "administrative_area_level_2")
+								$("#district")
+										.val(
+												address_components[i].long_name);
+							if (address_components[i].types[0] == "administrative_area_level_1")
+								$("#city")
+										.val(
+												address_components[i].long_name);
+						}
+						console.log($("#number").val());
+						console.log($("#street").val());
+						console.log($("#district").val());
+						console.log($("#city").val());
+						$("#submit").click();
+						//]]>
+					});
+				}
+			</script>
+			<script
+				src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAvf54CFkOs8IYv9qn39jyBk3pTj7rMnCE&amp;libraries=places&amp;callback=initMap"
+				async="true" defer="defer"></script>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

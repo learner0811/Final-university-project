@@ -1,0 +1,340 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+
+<ui:composition template="template/template.xhtml">
+	<ui:define name="body">
+		<style>
+.ui-selectcheckboxmenu {
+	border: 1px solid #ced4da !important;
+	border-radius: .25rem !important;
+	font-size: 1rem;
+}
+
+.ui-state-focus {
+	color: #495057;
+	background-color: #fff;
+	border-color: #80bdff !important;
+	outline: 0;
+	box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, .25);
+}
+
+.ui-selectcheckboxmenu .ui-selectcheckboxmenu-label-container {
+	padding: 0.3em !important;
+}
+
+.input {
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+}
+
+.buttonInside {
+	position: relative;
+	margin-bottom: 10px;
+}
+
+.buttonInside button {
+	position: absolute;
+	right: 10px;
+	top: 10px;
+	border: none;
+	height: 20px;
+	width: 20px;
+	border-radius: 100%;
+	outline: none;
+	text-align: center;
+	font-weight: bold;
+	padding: 2px;
+	background-color: #fff;
+}
+</style>
+		<f:metadata>
+			<f:viewParam name="number" value="#{searchController.number}" />
+			<f:viewParam name="street" value="#{searchController.street}" />
+			<f:viewParam name="district" value="#{searchController.district}" />
+			<f:viewParam name="city" value="#{searchController.city}" />
+		</f:metadata>
+		<!-- <div id="searchArea">
+			<button type="button" id="mapSidebarCollapse" class="btn btn-info">
+				<i class="fa fa-bars" aria-hidden="true"></i>
+			</button>
+		</div> -->		
+		<div class="search-wrapper">
+			<div id="searchContent">
+				<div class="container-fluid">
+					<div class="emptybox"></div>
+					<div class="emptybox"></div>
+					<h:form>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="row">
+									<div class="col-md-12">
+										<div class="buttonInside">
+											<h:inputText class="form-control"
+												value="#{searchController.searchDto.addressLine}"
+												a:id="search-input" a:placeholder="Nhập địa chỉ tìm kiếm"></h:inputText>
+											<p:commandButton update="result" styleClass="fas fa-search"
+												a:id="magnifying-btn" action="#{searchController.doFilter}" />
+										</div>
+										<div style="display: none">
+											<h:inputText a:id="number"
+												value="#{searchController.searchDto.number}"></h:inputText>
+											<h:inputText a:id="street"
+												value="#{searchController.searchDto.street}"></h:inputText>
+											<h:inputText a:id="district"
+												value="#{searchController.searchDto.district}"></h:inputText>
+											<h:inputText a:id="city"
+												value="#{searchController.searchDto.city}"></h:inputText>
+										</div>
+									</div>
+								</div>
+								<div class="emptybox"></div>
+								<div class="row">
+									<div class="col-md-4">										
+										<h:selectOneMenu value="#{searchController.searchDto.period}" styleClass="form-control">
+											<f:selectItem itemValue="" itemLabel="Tất cả" />
+											<f:selectItem itemValue="Không giới hạn" itemLabel="Không giới hạn" />
+											<f:selectItem itemValue="6 tháng" itemLabel="6 tháng" />
+											<f:selectItem itemValue="1 năm" itemLabel="1 năm" />
+										</h:selectOneMenu>
+									</div>
+									<div class="col-md-4">
+										<div class="dropdown">
+											<input class="form-control dropdown-toggle" value="Giá thuê"
+												data-toggle="dropdown"></input>
+											<div class="dropdown-menu"
+												style="width: 100%; padding: 20px 16px;">
+												<h:outputText id="output"
+													value="Tới khoảng #{searchController.searchDto.rent} ₫" />
+												<h:inputHidden id="txt2"
+													value="#{searchController.searchDto.rent}" />
+												<p:slider for="txt2" display="output" style="width: 200px"
+													displayTemplate="Rent to {value} ₫" maxValue="100000000"
+													step="100000" />
+											</div>
+										</div>
+									</div>
+									<div class="col-md-4">
+										<div class='input-group date' id='datetimepicker1'>
+											<h:inputText type='text'
+												value="#{searchController.searchDto.movingDate}"
+												class="form-control">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:inputText>
+											<div class="input-group-append">
+												<span class="input-group-text"> <i
+													class="far fa-calendar-alt"></i>
+												</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</h:form>
+					<h:panelGroup id="result">
+						<ui:repeat var="item" value="#{searchController.lstRoomOwner}"
+							varStatus="roomStatus">
+							<div class="row search-item-box">
+								<div class="card mb-3" style="width: 100%;">
+									<div class="row no-gutters">
+										<div class="col-md-4">
+											<div id="demo#{roomStatus.index}" class="carousel slide"
+												data-ride="carousel">
+												<!-- Indicators -->
+												<ul class="carousel-indicators">
+													<ui:repeat var="imageItem" value="#{item.room.images}"
+														varStatus="imageVarStatus">
+														<li data-target="#demo#{roomStatus.index}"
+															data-slide-to="#{imageVarStatus.index}" class="active">
+														</li>
+													</ui:repeat>
+												</ul>
+
+												<!-- The slideshow -->
+												<div class="carousel-inner">
+													<ui:repeat var="imageItem" value="#{item.room.images}"
+														varStatus="imageVarStatus">
+														<div class="carousel-item active"
+															jsf:rendered="#{imageVarStatus.index == 1}">
+															<p:graphicImage url="/images/2/#{imageItem.fileName}"></p:graphicImage>
+														</div>
+														<div class="carousel-item"
+															jsf:rendered="#{imageVarStatus.index != 1}">
+															<p:graphicImage url="/images/2/#{imageItem.fileName}"></p:graphicImage>
+														</div>
+													</ui:repeat>
+												</div>
+
+												<!-- Left and right controls -->
+												<a class="carousel-control-prev"
+													href="#demo#{roomStatus.index}" data-slide="prev"> <span
+													class="carousel-control-prev-icon"></span>
+												</a> <a class="carousel-control-next"
+													href="#demo#{roomStatus.index}" data-slide="next"> <span
+													class="carousel-control-next-icon"></span>
+												</a>
+											</div>
+										</div>
+										<div class="col-md-8">
+											<div class="card-body">
+												<h5 class="card-title">
+													<a href="room.xhtml?id=#{item.idRoomOwner}"> <h:outputText
+															value="#{item.room.title}"></h:outputText>
+													</a>
+												</h5>
+												<p class="card-text"></p>
+												<p class="card-text">
+													<i class="fas fa-map-marker-alt"></i>
+													<h:outputText value="&#160;&#160;&#160;&#160;&#160;"></h:outputText>
+													<h:outputText rendered="#{item.room.address.number != 0}" value="#{item.room.address.number}"></h:outputText>
+													<h:outputText value=" "></h:outputText>
+													<h:outputText value="#{item.room.address.street}"></h:outputText>
+													<h:outputText value=" "></h:outputText>
+													<h:outputText value="#{item.room.address.district}"></h:outputText>
+													<h:outputText value=" "></h:outputText>
+													<h:outputText value="#{item.room.address.city}"></h:outputText>
+												</p>
+												<p class="card-text">
+													<i class="fas fa-money-bill-alt"></i>
+													<h:outputText value="&#160;&#160;&#160;"></h:outputText>
+													<h:outputText value="#{item.room.rent}">
+														<f:convertNumber pattern="¤#,##0" currencySymbol="" />
+													</h:outputText>
+													<h:outputText value=" ₫"></h:outputText>
+												</p>
+												<p class="card-text">
+													<ui:repeat var="facilitiesItem"
+														value="#{item.room.facilities}">
+														<i class="#{facilitiesItem.icon}"></i>
+														<h:outputText value="#{facilitiesItem.name}"></h:outputText>													
+													&nbsp;&nbsp;&nbsp;
+												</ui:repeat>
+												</p>
+												<p class="card-text">
+													<small class="text-muted"> <h:outputText
+															value="#{item.room.createDate}"
+															converter="hn46.sa.converter.LastUpdatedConverter"></h:outputText>
+													</small>
+												</p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="emptybox"></div>
+						</ui:repeat>
+					</h:panelGroup>
+				</div>
+			</div>
+			<nav id="mapSidebar">				
+				<div id="map" style="height: 100%"></div>
+			</nav>
+		</div>
+
+		<script>
+			$(document).ready(function () {
+				
+			    $('#mapSidebarCollapse').on('click', function () {
+			        $('#mapSidebar').toggleClass('active');
+			        $('#searchContent').toggleClass('active');
+			    });
+
+			    $('#datetimepicker1').datepicker({
+					format: 'dd/mm/yyyy',								
+				});
+			    $("#datetimepicker1").datepicker("setDate", new Date());
+
+				$(".buttonInside button span").remove();				
+			});
+		
+      		var map;
+      		var rootContext = "/shared.accommodation";
+      		function initMap() {
+	        	map = new google.maps.Map(document.getElementById('map'), {
+	        		center: {lat: 21.0278, lng: 105.8342},
+	          		zoom: 6
+	        	});
+
+	        	var markers = [];	        	
+	        	
+	        	$.ajax({
+        		  url: rootContext + "/api/room_owners",
+        		  success: function(data){ responseHandle(data)}
+        		});
+
+
+
+	      		function responseHandle(data){
+					data.payload.forEach(function(item){
+						var address = item.room.address;
+						console.log(address);
+						var position = {lat : address.latitude , lng : address.longitude};
+						var marker = new google.maps.Marker({position: position, map: map});
+						marker.addListener('click', function() {
+							window.location.href = "http://localhost:8080/shared.accommodation/room.xhtml?id=" + item.idRoomOwner;
+						});
+						markers.push(marker);
+						
+					});		
+
+					var markerCluster = new MarkerClusterer(map, markers, {imagePath : "http://localhost:8080/shared.accommodation/images/3/m"});									
+	            }
+
+	      		var searchInput = document.getElementById('search-input');
+				var options = {
+					types : [ 'regions', 'address ', 'geocode' ]
+				};
+				var autocomplete = new google.maps.places.Autocomplete(
+						searchInput);
+				autocomplete.setComponentRestrictions({
+					'country' : 'VN'
+				});
+				autocomplete.addListener('place_changed',function() {
+					var place = autocomplete.getPlace();
+					if (!place.geometry) {
+						alert("No place");
+						return;
+					}															
+					
+					//reset address
+					$("#number").val('');
+					$("#street").val('');
+					$("#district").val('');
+					$("#city").val('');
+
+					//<![CDATA[	        			
+					var address_components = place.address_components;						
+					for (var i = 0; i < address_components.length; i++) {
+						if (address_components[i].types[0] == "street_number")
+							$("#number")
+									.val(
+											address_components[i].long_name);
+						else if (address_components[i].types[0] == "route")
+							$("#street")
+									.val(
+											address_components[i].long_name);
+						if (address_components[i].types[0] == "administrative_area_level_2")
+							$("#district")
+									.val(
+											address_components[i].long_name);
+						if (address_components[i].types[0] == "administrative_area_level_1")
+							$("#city")
+									.val(
+											address_components[i].long_name);
+					}					
+					//]]>
+				});				
+      		} 
+    	</script>
+		<script
+			src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAvf54CFkOs8IYv9qn39jyBk3pTj7rMnCE&amp;language=vn&amp;libraries=places&amp;callback=initMap"
+			async="true" defer="defer"></script>
+		<h:outputScript name="js/markerclusterer.js"></h:outputScript>
+	</ui:define>
+</ui:composition>
+</html>

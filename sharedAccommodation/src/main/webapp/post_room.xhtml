@@ -1,0 +1,712 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+<ui:composition template="template/template.xhtml">
+	<ui:define name="body">
+		<style>
+#map {
+	height: 300px;
+}
+</style>
+		<h:outputStylesheet name="common/bootstrap/css/tagsinput.css"></h:outputStylesheet>		
+		<div class="container-fluid">
+			<div class="emptybox5"></div>
+			<h:form>
+				<p:confirmDialog header="Warning" widgetVar="dlg" showEffect="fade"
+					hideEffect="fade" width="350px"
+					message="Bạn đang là người tìm phòng. Nếu tiếp tục bài tìm phòng sẽ bị ẩn.">
+					<p:commandButton value="Yes" styleClass="ui-confirmdialog-yes"
+						icon="pi pi-check" action="#{postRoomController.confirmYes}"
+						oncomplete="PF('dlg').hide()" />
+					<p:commandButton value="No" styleClass="ui-confirmdialog-no"
+						icon="pi pi-times" action="#{postRoomController.redirect}"
+						oncomplete="PF('dlg').hide()" />
+				</p:confirmDialog>
+			</h:form>
+			<h:form>
+				<p:confirmDialog header="Warning" widgetVar="dlg1" showEffect="fade"
+					hideEffect="fade" width="350px"
+					message="Bạn có muốn thực hiện tác vụ">
+					<p:commandButton value="Yes" styleClass="ui-confirmdialog-yes"
+						icon="pi pi-check" action="#{postRoomController.confirmYes2}"
+						oncomplete="PF('dlg1').hide()" />
+					<p:commandButton value="No" styleClass="ui-confirmdialog-no"
+						icon="pi pi-times"
+						oncomplete="PF('dlg1').hide()" />
+				</p:confirmDialog>			
+			</h:form>
+			<h:form id="fImage">
+				<p:dialog header="Ảnh phòng" widgetVar="imageDialog"
+					modal="true" showEffect="fade" hideEffect="fade" resizable="false"
+					width="800px">
+					<p:scrollPanel style="height:500px">
+						<p:dataTable id="dataTable" var="item" rowIndexVar="index"
+							value="#{postRoomController.room.images}">
+							<f:facet name="header">Quản lý ảnh phòng trọ</f:facet>
+							<p:column headerText="Số thứ tự" style="text-align: center;">
+								<h:outputText value="#{index + 1}" />
+							</p:column>
+							<p:column headerText="Tên file">
+								<h:outputText value="#{item.fileName}" />
+							</p:column>
+							<p:column headerText="Ảnh">
+								<p:graphicImage width="300px" height="200px"
+									styleClass="figure-img img-fluid rounded"
+									url="/images/2/#{item.fileName}"></p:graphicImage>
+							</p:column>
+							<p:column style="width:32px;text-align: center">
+								<p:commandButton id="test" icon="fas fa-trash-alt"
+									action="#{postRoomController.deleteImage}"
+									update=":fImage:dataTable" ajax="true">
+									<f:setPropertyActionListener value="#{item}"
+										target="#{postRoomController.imageSelected}" />
+									<p:confirm header="Confirmation" message="Bạn có chắc muốn xóa ảnh?"
+										icon="pi pi-exclamation-triangle" />
+								</p:commandButton>
+							</p:column>
+						</p:dataTable>
+					</p:scrollPanel>
+				</p:dialog>
+
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+					<p:commandButton value="Có" type="button"
+						styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+					<p:commandButton value="Không" type="button"
+						styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+				</p:confirmDialog>
+
+				<p:blockUI block="dataTable" trigger="dataTable" />
+
+			</h:form>
+			<h:form enctype="multipart/form-data" id="main-form">
+				<div class="flex-wrapper">
+					<div class="progress-bar-box ml-5">
+						<div class="emptybox"></div>
+						<ul id="progress">
+							<li>
+								<div class="node blue"></div>
+								<button type="button" class="button-text"
+									onclick="click2Scroll('room')">
+									<span class="badget badge-pill badge-info">Phòng</span>
+								</button>
+							</li>
+							<li>
+								<div class="divider grey"></div>
+							</li>
+							<h:panelGroup id="progressPnl">
+								<h:panelGroup rendered="#{!postRoomController.type}">
+									<li>
+										<div class="node green"></div>
+										<button type="button" class="button-text"
+											onclick="click2Scroll('roommate_crtiteria')">
+											<span class="badget badge-pill badge-success">Bạn cùng phòng</span>
+										</button>
+									</li>
+									<li>
+										<div class="divider grey"></div>
+									</li>
+								</h:panelGroup>
+							</h:panelGroup>
+							<li>
+								<div class="node red"></div>
+								<button type="button" class="button-text"
+									onclick="click2Scroll('room_owner')">
+									<span class="badget badge-pill badge-danger">Chủ phòng</span>
+								</button>
+							</li>
+						</ul>
+
+						<div class="emptybox"></div>
+						<div class="emptybox"></div>
+						<div class="emptybox"></div>
+						<div style="width: 200px">
+							<h:commandButton styleClass="commandBtn btn-red btn-small"
+								action="#{postRoomController.postRoom}" value="Lưu">
+							</h:commandButton>
+						</div>
+					</div>
+					<div class="content-box">
+
+						<div id="room" class="card">
+							<div class="card-header" style="position: relative;">
+								<h3 style="text-align: center">Thông tin phòng</h3>
+								<p:selectBooleanButton disabled="#{postRoomController.mode == 'insert'}" onLabel="Đóng bài" offLabel="Mở bài" 
+									style="position : absolute; right : 10px; top : 15px"
+									value="#{postRoomController.closeTopic}">
+									<p:ajax listener="#{postRoomController.switchPost}" />
+								</p:selectBooleanButton>								
+							</div>
+							<div class="card-body">
+								<div class="row">
+									<label for="title" class="col-md-3">Loại chia sẻ phòng</label>
+									<div class="col-md-9">
+										<p:selectBooleanButton value="#{postRoomController.type}" onLabel="Cho thuê" offLabel="Chia sẻ" style="width:120px" >
+											<p:ajax update="main-form:roommatePnl,progressPnl,gr1Pnl,gr2Pnl" listener="#{postRoomController.switchType}" />
+										</p:selectBooleanButton>
+									</div>
+								</div>
+								<div class="emptybox"></div>
+								<div class="row">
+									<label for="title" class="col-md-3">Tiêu đề bài đăng</label>
+									<div class="col-md-9">
+										<h:inputText id="title" styleClass="form-control"
+											value="#{postRoomController.room.title}"></h:inputText>
+									</div>
+								</div>
+								<div class="emptybox"></div>
+								<div class="row">
+									<label for="title" class="col-md-3">Diện tích</label>
+									<div class="col-md-9">
+										<h:inputText styleClass="form-control"
+											value="#{postRoomController.room.square}"
+											converterMessage="Please enter digits only."></h:inputText>
+									</div>
+								</div>
+								<div class="emptybox"></div>
+								<div class="row">
+									<label for="title" class="col-md-3">Giá cho thuê</label>
+									<div class="col-md-9">
+										<p:inputNumber value="#{postRoomController.room.rent}"
+											converterMessage="Chỉ được nhập vào số." a:id="rent"
+											decimalPlaces="0"></p:inputNumber>
+									</div>
+								</div>
+								<div class="emptybox"></div>
+								<div class="row">
+									<label for="title" class="col-md-3">Ngày chuyển tới</label>
+									<div class="col-md-9">
+										<div class='input-group date' id='datetimepicker1'>
+											<h:inputText type='text'
+												value="#{postRoomController.room.movingDate}"
+												class="form-control">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:inputText>
+											<span class="input-group-addon"> <span
+												class="glyphicon glyphicon-calendar"></span>
+											</span>
+										</div>
+									</div>
+								</div>
+								<div class="emptybox"></div>
+								<div class="row">
+									<label for="title" class="col-md-3">Thời gian thuê</label>
+									<div class="col-md-9">
+										<h:selectOneMenu styleClass="form-control"
+											value="#{postRoomController.room.period}">
+											<f:selectItem itemValue="6 tháng" itemLabel="6 tháng" />
+											<f:selectItem itemValue="1 năm" itemLabel="1 năm" />
+											<f:selectItem itemValue="Không giới hạn" itemLabel="Không giới hạn" />
+										</h:selectOneMenu>
+									</div>
+								</div>
+								<h:panelGroup id="gr2Pnl">
+									<h:panelGroup rendered="#{postRoomController.type}">
+										<div class="emptybox"></div>
+										<div class="row">
+											<div class="col-md-3">
+												<label>Tổng số phòng</label>
+											</div>
+											<div class="col-md-3">
+												<h:inputText a:type="number" 
+													styleClass="form-control"
+													value="#{postRoomController.landlord.roomNumber}"></h:inputText>												
+											</div>
+											<div class="col-md-3">
+												<label>Số phòng trống</label>
+											</div>
+											<div class="col-md-3">
+												<h:inputText a:type="number" 
+												styleClass="form-control"
+												value="#{postRoomController.landlord.available}"></h:inputText>
+											</div>
+										</div>
+									</h:panelGroup>
+								</h:panelGroup>
+								<div class="emptybox"></div>
+								<div class="row">
+									<label for="title" class="col-md-3">Địa chỉ</label>
+									<div class="col-md-9">
+										<input id="search-input" placeholder="Nhập vào địa chỉ"
+											class="form-control" />
+										<div class="emptybox"></div>
+										<div id="map"></div>
+										<div id="infowindow-content">
+											<img src="" width="16" height="16" id="place-icon"></img> <span
+												id="place-name" class="title"></span><br></br> <span
+												id="place-address"></span>
+										</div>
+										<div class="emptybox"></div>
+										<div class="col-sm-12">
+											<div class="row">
+												<label class="col-sm-4">Số nhà</label>
+												<div id="street_number" class="col-sm-8">
+													<h:inputText
+														value="#{postRoomController.room.address.number}"
+														class="form-control"></h:inputText>
+												</div>
+											</div>
+											<div class="emptybox"></div>
+											<div class="row">
+												<label class="col-sm-4">Phố</label>
+												<div id="route" class="col-sm-8">
+													<h:inputText
+														value="#{postRoomController.room.address.street}"
+														class="form-control"></h:inputText>
+												</div>
+											</div>
+											<div class="emptybox"></div>
+											<div class="row">
+												<label class="col-sm-4">Quận/huyện</label>
+												<div id="administrative_area_level_2" class="col-sm-8">
+													<h:inputText
+														value="#{postRoomController.room.address.district}"
+														class="form-control"></h:inputText>
+												</div>
+											</div>
+											<div class="emptybox"></div>
+											<div class="row">
+												<label class="col-sm-4">Thành phố/tỉnh</label>
+												<div class="col-sm-8" id="administrative_area_level_1">
+													<h:inputText
+														value="#{postRoomController.room.address.city}"
+														class="form-control"></h:inputText>
+												</div>
+											</div>
+											<div class="emptybox"></div>
+											<div class="row" style="display: none">
+												<div class="col-sm-6" id="lat">
+													<h:inputText
+														value="#{postRoomController.room.address.latitude}"
+														class="form-control"></h:inputText>
+												</div>
+												<div class="col-sm-6" id="lng">
+													<h:inputText class="form-control"
+														value="#{postRoomController.room.address.longitude}"></h:inputText>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="emptybox"></div>
+								<div class="row">
+									<label for="title" class="col-md-3">Cơ sở vật chất</label>
+									<div class="col-md-9">
+										<i class="fas fa-washer"></i>
+										<p:selectCheckboxMenu id="multiple"
+											value="#{postRoomController.room.facilities}" multiple="true"
+											filter="true" filterMatchMode="startsWith"
+											panelStyle="width:250px">
+											<f:selectItems value="#{postRoomController.facilites}" />
+											<f:converter
+												converterId="hn46.sa.converter.FacilitiesConverter"></f:converter>
+										</p:selectCheckboxMenu>
+									</div>
+								</div>
+								<div class="emptybox"></div>
+								<div class="row">
+									<label for="title" class="col-md-3">Mô tả</label>
+									<div class="col-md-9">
+										<h:inputTextarea
+											value="#{postRoomController.room.description}" rows="5"
+											styleClass="form-control" />
+									</div>
+								</div>
+								<div class="emptybox"></div>
+								<div class="row">
+									<label for="title" class="col-md-3">Quản lý ảnh</label>
+									<div class="col-md-9">
+										<p:fileUpload label="FileLocal" dragDropSupport="false"
+											mode="advanced"
+											fileUploadListener="#{postRoomController.handleFileUpload}"
+											multiple="true" sizeLimit="1000000" fileLimit="10"
+											update="messages" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
+										<p:growl id="messages" showDetail="true" />
+										<p:commandButton oncomplete="PF('imageDialog').show()"
+											value="Quản lý ảnh" icon="fa fa-picture-o" title="View">
+											<div class="emptybox"></div>
+										</p:commandButton>
+									</div>
+								</div>
+								<div class="emptybox"></div>
+							</div>
+
+						</div>
+						<div class="emptybox5"></div>
+						<h:panelGroup id="roommatePnl">
+							<h:panelGroup rendered="#{!postRoomController.type}">
+								<div id="roommate_crtiteria" class="card">
+									<div class="card-header">
+										<h3 style="text-align: center">Tiêu chí bạn cùng phòng</h3>
+									</div>
+									<div class="card-body">
+										<div class="row">
+											<label for="title" class="col-md-3">Tuổi</label>
+											<div class="col-md-9">
+												<h:outputText id="displayRange" value="Từ 0 tới 100" />
+												<p:slider for="txt6,txt7" display="displayRange"
+													style="width: 100%" range="true"
+													displayTemplate="Từ {min} tới {max}" />
+												<h:inputHidden id="txt6"
+													value="#{postRoomController.number1}" />
+												<h:inputHidden id="txt7"
+													value="#{postRoomController.number2}" />
+											</div>
+										</div>
+										<div class="emptybox"></div>										
+										<div class="emptybox"></div>
+										<div class="row">
+											<label for="title" class="col-md-12">Giới tính</label>
+											<div class="col-md-5">
+												<p:selectOneRadio id="customRadio"
+													value="#{postRoomController.roommateCriteria.gender}"
+													layout="responsive" columns="1">
+													<f:selectItem itemLabel="Nam" itemValue="0" />
+													<f:selectItem itemLabel="Nữ" itemValue="1" />
+													<f:selectItem itemLabel="Không yêu cầu" itemValue="2" />
+												</p:selectOneRadio>
+											</div>
+										</div>
+										<div class="emptybox"></div>
+										<div class="emptybox"></div>
+										<div class="row">
+											<label for="title" class="col-md-12">Tình trạng hôn
+												nhân</label>
+											<div class="col-md-5">
+												<p:selectOneRadio layout="responsive" columns="1"
+													value="#{postRoomController.roommateCriteria.civil_status}">
+													<f:selectItem itemLabel="Độc thân" itemValue="1" />
+													<f:selectItem itemLabel="Kết hôn" itemValue="2" />
+													<f:selectItem itemLabel="Không yêu cầu" itemValue="0" />
+												</p:selectOneRadio>
+											</div>
+										</div>
+										<div class="emptybox"></div>
+										<div class="emptybox"></div>
+										<div class="row">
+											<label for="title" class="col-md-12">Có trẻ em đi kèm</label>
+											<div class="col-md-5">
+												<p:selectOneRadio layout="responsive" columns="1"
+													value="#{postRoomController.roommateCriteria.children}">
+													<f:selectItem itemLabel="Được" itemValue="1" />
+													<f:selectItem itemLabel="Không được" itemValue="0" />
+												</p:selectOneRadio>
+											</div>
+										</div>
+										<div class="row">
+											<label for="title" class="col-md-12">Sạch sẽ</label>
+											<div class="col-md-8">
+												<p:selectOneRadio layout="responsive" columns="1"
+													value="#{postRoomController.roommateCriteria.cleancliness}">
+													<f:selectItem itemLabel="Sạch" itemValue="0" />
+													<f:selectItem itemLabel="Trung bình" itemValue="2" />
+													<f:selectItem itemLabel="Không" itemValue="1" />
+												</p:selectOneRadio>
+											</div>
+										</div>
+										<div class="emptybox"></div>
+										<div class="row">
+											<label for="title" class="col-md-12">Hút thuốc</label>
+											<div class="col-md-8">
+												<p:selectOneRadio layout="responsive" columns="1"
+													value="#{postRoomController.roommateCriteria.smoker}">
+													<f:selectItem itemLabel="Có" itemValue="0" />
+													<f:selectItem itemLabel="Không" itemValue="1" />
+												</p:selectOneRadio>
+											</div>
+										</div>
+										<div class="emptybox"></div>
+										<div class="row">
+											<label for="title" class="col-md-12">Có được nuôi thú
+												cưng</label>
+											<div class="col-md-8">
+												<p:selectOneRadio layout="responsive" columns="1"
+													value="#{postRoomController.roommateCriteria.petAllowed}">
+													<f:selectItem itemLabel="Có" itemValue="1" />
+													<f:selectItem itemLabel="Không" itemValue="0" />
+												</p:selectOneRadio>
+											</div>
+										</div>
+									</div>
+								</div>
+							</h:panelGroup>
+						</h:panelGroup>
+						<div class="emptybox5"></div>
+
+						<div id="room_owner" class="card">
+							<div class="card-header">
+								<h3 style="text-align: center">Thông tin chủ phòng</h3>
+							</div>
+							<div class="card-body">
+								<div class="row">
+									<label for="title" class="col-md-3">Tên</label>
+									<div class="col-md-9">
+										<h:inputText styleClass="form-control"
+											value="#{postRoomController.roomOwner.name}"></h:inputText>
+									</div>
+								</div>
+								<div class="emptybox"></div>
+								<div class="row">
+									<label for="title" class="col-md-3">Tuổi</label>
+									<div class="col-md-9">
+										<h:inputText styleClass="form-control"
+											value="#{postRoomController.roomOwner.age}"></h:inputText>
+									</div>
+								</div>
+								<div class="emptybox"></div>								
+								<div class="row">
+									<label for="title" class="col-md-12">Giới tính</label>
+									<div class="col-md-12">
+										<p:selectOneRadio layout="responsive" columns="1"
+											value="#{postRoomController.roomOwner.gender}">
+											<f:selectItem itemLabel="Nam" itemValue="0" />
+											<f:selectItem itemLabel="Nữ" itemValue="1" />												
+										</p:selectOneRadio>
+									</div>
+								</div>								
+								<div class="emptybox"></div>
+								<div class="row">
+									<label for="title" class="col-md-3">Số điện thoại</label>
+									<div class="col-md-9">
+										<h:inputText styleClass="form-control"
+											value="#{postRoomController.roomOwner.phone}"></h:inputText>
+									</div>
+								</div>
+								<div class="emptybox"></div>
+								<div class="row">
+									<label for="title" class="col-md-3">Email</label>
+									<div class="col-md-9">
+										<h:inputText styleClass="form-control"
+											value="#{postRoomController.roomOwner.email}"
+											validatorMessage="Invalid email format">
+											<f:validateRegex
+												pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+										</h:inputText>
+									</div>
+								</div>								
+								<h:panelGroup id="gr1Pnl">
+								<h:panelGroup rendered="#{!postRoomController.type}">
+									<div class="emptybox"></div>								
+									<div class="row">
+										<label for="title" class="col-md-3">Quê quán</label>
+										<div class="col-md-9">
+											<h:selectOneMenu styleClass="form-control"
+												value="#{postRoomController.roomOwner.strNative}">
+												<f:selectItem itemValue="Không hiển thị"></f:selectItem>
+												<f:selectItems value="#{postRoomController.nativeList}"
+													var="model" itemLabel="#{model.name}"
+													itemValue="#{model.name}"></f:selectItems>
+											</h:selectOneMenu>
+										</div>
+									</div>									
+									<div class="row">
+										<label for="title" class="col-md-12">Tình trạng hôn nhân</label>
+										<div class="col-md-12">
+											<p:selectOneRadio layout="responsive" columns="1"
+												value="#{postRoomController.roomOwner.gender}">
+												<f:selectItem itemLabel="Độc thân" itemValue="1" />
+												<f:selectItem itemLabel="Kết hôn" itemValue="2" />
+												<f:selectItem itemLabel="Không hiển thị" itemValue="0" />
+											</p:selectOneRadio>
+										</div>
+									</div>
+									<div class="emptybox"></div>
+									<div class="row">
+										<label for="title" class="col-md-3">Sở thích</label>
+										<div class="col-md-9">
+											<h:inputText styleClass="bootstrap-tagsinput interesting"
+												a:data-role="tagsinput"
+												value="#{postRoomController.roomOwner.interests}"></h:inputText>
+										</div>
+									</div>
+									<div class="emptybox"></div>
+									<div class="row">
+										<label for="title" class="col-md-3">Nghề nghiệp</label>
+										<div class="col-md-9">
+											<h:inputText class="form-control ocuppation"
+												value="#{postRoomController.roomOwner.ocupation}"></h:inputText>
+										</div>
+									</div>								
+									<div class="emptybox"></div>
+								</h:panelGroup>
+								</h:panelGroup>
+								<div class="emptybox"></div>
+								<div class="row">
+									<label for="title" class="col-md-3">Ảnh cá nhân</label>
+									<div class="col-md-9">
+										<p:fileUpload value="#{postRoomController.avatar}"
+											mode="simple" skinSimple="true" />
+										<small class="form-text text-muted">Bạn chỉ được tải lên 1 file</small>
+										<div style="clear: both"></div>
+										<h:panelGroup layout="block">
+											<figure class="figure"> <p:graphicImage
+												width="300px" height="200px"
+												styleClass="figure-img img-fluid rounded"
+												url="/images/1/#{postRoomController.roomOwner.avatar.fileName}"></p:graphicImage>
+											</figure>
+										</h:panelGroup>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</h:form>
+
+		</div>
+
+		<script type="text/javascript">		
+			//<![CDATA[
+			$(document).ready(function() {
+				$('#datetimepicker1').datepicker({
+					format: 'dd/mm/yyyy',								
+				});
+				$("#datetimepicker1").datepicker("setDate", new Date());
+				$('[data-toggle="tooltip"]').tooltip();
+
+				var ocuppation = new Bloodhound({
+					  datumTokenizer: Bloodhound.tokenizers.whitespace,
+					  queryTokenizer: Bloodhound.tokenizers.whitespace,
+					  local:  ["Kỹ sử", "Đầu bếp", "Bác sĩ", "Nhân viên văn phòng", "Doanh nhân", "Không hiển thị","Học sinh", "Nghê tự do"]
+				});
+				
+				$(".ocuppation").typeahead({
+					items: 4,
+					source: ocuppation.ttAdapter()
+				});
+
+				$(window).keydown(function(event){
+					var isTagInput = event.target.parentElement.getAttribute("class");
+					if (isTagInput != undefined && isTagInput.includes('bootstrap-tagsinput'))
+						return true;
+				    if(event.keyCode == 13) {					    
+				      event.preventDefault();
+				      return false;
+				    }
+				});
+
+				$("#rent input").attr("class", "form-control");
+	        });		
+			//]]>	
+
+			function click2Scroll(element){
+				element = "#" + element;								
+				$('html,body').animate({					
+			        scrollTop: $(element).offset().top},
+			    'slow');
+			}
+			
+			var componentForm = {
+			  street_number: 'short_name',
+			  route: 'long_name',			  
+			  administrative_area_level_2: 'long_name',
+			  administrative_area_level_1: 'long_name',
+			  country: 'short_name'			  
+			};
+
+			$(".custom-file-input").on("change", function() {
+				var fileName = $(this).val().split("\\").pop();
+				$(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+			});
+	        
+			var map;
+      		function initMap() {
+	        	map = new google.maps.Map(document.getElementById('map'), {
+	          		center: {lat: 21.0278, lng: 105.8342},
+	          		zoom: 8,
+	          		zoomControl: true,
+	          		disableDefaultUI: true
+	        	});
+
+	        	var searchInput = document.getElementById('search-input');					
+	        	var autocomplete = new google.maps.places.Autocomplete(searchInput);	        	
+	        	autocomplete.bindTo('bounds', map);
+	        	autocomplete.setFields(['address_components', 'geometry', 'icon', 'name']);
+	        	var marker = new google.maps.Marker({
+	                map: map,
+	                anchorPoint: new google.maps.Point(0, -29)
+	             });
+	        	var infowindow = new google.maps.InfoWindow();
+	            var infowindowContent = document.getElementById('infowindow-content');
+	            infowindow.setContent(infowindowContent);
+	            autocomplete.setComponentRestrictions({'country': 'VN'});
+	        	autocomplete.addListener('place_changed', function() {	                
+	                marker.setVisible(false);
+	                infowindow.close();
+	                var place = autocomplete.getPlace();
+	                if (!place.geometry) {
+	                  // User entered the name of a Place that was not suggested and
+	                  // pressed the Enter key, or the Place Details request failed.
+	                  window.alert("No details available for input: '" + place.name + "'");
+	                  return;
+	                }	                
+											
+					//check if the country is no vn
+					//<![CDATA[
+	                for (var i = 0; i < place.address_components.length; i++){						
+						var addressType = place.address_components[i].types[0];						
+						if (addressType == 'country' && place.address_components[i]["short_name"] != 'VN'){
+							alert("Bạn chỉ được chọn trong phạm vi lãnh thổ Việt Nam");
+							return;
+						}						
+					}	          
+
+
+					//reset auto complete
+					$("#street_number input").val('');
+					$("#route input").val('');
+					$("#administrative_area_level_2 input").val('');
+					$("#administrative_area_level_1 input").val('');																		
+					for (var i = 0; i < place.address_components.length; i++){						
+						var addressType = place.address_components[i].types[0];						
+						if (componentForm[addressType]) {
+					      	var val = place.address_components[i][componentForm[addressType]];					      							
+					     	$("#" + addressType + " input").val(val);					     	
+					    }
+					}				
+					//]]>
+	                // If the place has a geometry, then present it on a map.
+	                
+	                $("#lat input").val(place.geometry.location.lat());	                
+	                $("#lng input").val(place.geometry.location.lng());
+	                
+	                if (place.geometry.viewport) {
+	                  map.fitBounds(place.geometry.viewport);
+	                } else {
+	                  map.setCenter(place.geometry.location);
+	                  map.setZoom(17);  // Why 17? Because it looks good.
+	                }
+	                marker.setPosition(place.geometry.location);
+	                marker.setVisible(true);
+
+	                var address = '';
+	                if (place.address_components) {
+	                  address = [
+	                    (place.address_components[0] &amp;&amp; place.address_components[0].short_name || ''),
+	                    (place.address_components[1] &amp;&amp; place.address_components[1].short_name || ''),
+	                    (place.address_components[2] &amp;&amp; place.address_components[2].short_name || '')
+	                  ].join(' ');
+	                }
+					
+	                infowindowContent.children['place-icon'].src = place.icon;
+	                infowindowContent.children['place-name'].textContent = place.name;
+	                infowindowContent.children['place-address'].textContent = address;
+	                infowindow.open(map, marker);               
+	              });
+      		}      		
+		</script>
+		<script
+			src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAvf54CFkOs8IYv9qn39jyBk3pTj7rMnCE&amp;libraries=places&amp;callback=initMap"
+			async="true" defer="defer"></script>
+		<h:outputScript name="common/bootstrap/js/tagsinput.js"></h:outputScript>
+		<h:outputScript name="common/bootstrap/js/typeahead.js"></h:outputScript>
+		<h:outputScript name="common/bootstrap/js/bloodhound.js"></h:outputScript>
+		<h:outputScript name="common/bootstrap/js/bootstrap3-typeahead.js"></h:outputScript>
+	</ui:define>
+</ui:composition>
+</html>

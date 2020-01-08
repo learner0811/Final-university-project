@@ -1,0 +1,253 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="template/template.xhtml">
+	<ui:define name="body">				
+		<h:panelGroup id="result">
+		<div class="container">			
+			<div class="emptybox5"></div>
+			<div class="row">
+				<div class="col-md-4" id="filter">
+					<div class="emptybox"></div>
+					<div class="emptybox"></div>
+					<div class="card">
+						<div class="card-body">
+							<h:form>
+								<p:growl id="growl" showDetail="true" sticky="true" />								
+								<div class="emptybox"></div>
+								<div class="emptybox"></div>
+								<div class="row">
+									<div class="col-md-12">
+										<h:inputText a:id="search-input"
+											value="#{listTenantController.searchDto.addressLine}"
+											a:placeholder="Nhập địa chỉ tìm kiếm" class="form-control"></h:inputText>
+									</div>
+								</div>
+								<div class="emptybox"></div>
+								<div class="emptybox"></div>
+								<div class="row">
+									<div class="col-md-12">
+										<h5>Giới tính</h5>
+										<p:selectBooleanButton onLabel="Nam" offLabel="Nam"
+											onIcon="pi pi-check" offIcon="pi pi-times" style="width:45%"
+											value="#{listTenantController.searchDto.male}" />
+										<span class="mr-2"></span>
+										<p:selectBooleanButton onLabel="Nữ" offLabel="Nữ"
+											onIcon="pi pi-check" offIcon="pi pi-times"
+											style="width:45%; float : right"
+											value="#{listTenantController.searchDto.female}" />
+									</div>
+								</div>
+								<div class="emptybox"></div>
+								<div class="row">
+									<div class="col-md-12">
+										<h:outputText id="displayRange"
+											value="Độ tuổi trong khoảng #{listTenantController.searchDto.fromAge} tới #{listTenantController.searchDto.toAge}" />
+										<p:slider for="txt6,txt7" display="displayRange"
+											style="width: 100%" range="true"
+											displayTemplate="Between {min} and {max}" />
+										<h:inputHidden id="txt6"
+											value="#{listTenantController.searchDto.fromAge}" />
+										<h:inputHidden id="txt7"
+											value="#{listTenantController.searchDto.toAge}" />
+									</div>
+								</div>
+								<div class="emptybox"></div>
+								<div class="emptybox"></div>
+								<div class="emptybox"></div>
+								<div class="row">
+									<div class="col-md-4">
+										<h5>Quê quán</h5>
+									</div>
+									<div class="col-md-8">
+										<h:selectOneMenu styleClass="form-control"
+											value="#{listTenantController.searchDto.strNative}">
+											<f:selectItem itemLabel="Tất cả" itemValue="" />
+											<f:selectItems value="#{listTenantController.nativeList}"
+												var="model" itemLabel="#{model.name}"
+												itemValue="#{model.name}" />
+										</h:selectOneMenu>
+									</div>
+								</div>
+								<div class="emptybox"></div>
+								<div class="emptybox"></div>
+								<div class="emptybox"></div>
+								<div class="row">
+									<div class="col-md-12">
+										<h5>Khoảng tiền</h5>
+									</div>
+									<div class="col-md-6">
+										<h:inputText a:id="min" a:placeholder="Min" styleClass="form-control"
+											value="#{listTenantController.searchDto.fromBudget}"></h:inputText>
+									</div>
+									<div class="col-md-6">
+										<h:inputText a:id="max" a:placeholder="Max" styleClass="form-control"
+											value="#{listTenantController.searchDto.toBudget}"></h:inputText>
+									</div>
+								</div>
+								<div class="emptybox"></div>
+								<div class="row">
+									<div class="col-md-12">
+										<h5>Ngày chuyển tới</h5>
+									</div>
+									<div class="col-md-12">
+										<div class='input-group date' id='datetimepicker1'>
+											<h:inputText type='text' class="form-control"
+												value="#{listTenantController.searchDto.movingDate}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:inputText>
+											<span class="input-group-addon"> <span
+												class="glyphicon glyphicon-calendar"></span>
+											</span>
+										</div>
+									</div>
+								</div>
+								<div class="emptybox"></div>
+								<div class="emptybox"></div>
+								<div class="row">
+									<div class="col-md-12">
+										<p:commandButton id="searchBtn" value="Tìm" update="result, growl"
+											styleClass="commandBtn btn-red btn-small"
+											action="#{listTenantController.doFilter}"></p:commandButton>
+									</div>
+								</div>
+							</h:form>
+						</div>
+					</div>
+				</div>
+				
+				<div class="col-md-8" id="result-list">
+					<div class="emptybox"></div>
+					<div class="emptybox"></div>
+					<ui:repeat value="#{listTenantController.listTenant}" var="tenant">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="card mb-3">
+									<div class="row no-gutters">
+										<div class="col-md-4">
+											<div class="profile-userpic">
+												<img src="images/1/#{tenant.avatar.fileName}"
+													class="card-img" alt="..."></img>
+											</div>
+											<div style="text-align: center">
+												<span> <h:outputText value="#{tenant.name}"></h:outputText>
+												</span>
+											</div>
+										</div>
+										<div class="col-md-8">
+											<div class="card-body">
+												<h5 class="card-title">
+													<a href="tenant.xhtml?id=#{tenant.idTenant}"> <h:outputText
+															value="#{tenant.roomCriteria.title}"></h:outputText>
+													</a>
+												</h5>
+												<p class="card-text">
+													<i class="fas fa-search-location"></i>
+													<h:outputText value="&#160;"></h:outputText>
+													<h:outputText value="#{tenant.roomCriteria.searchLocation}"></h:outputText>
+												</p>
+												<div class="badge badge-primary box">
+													<div>Ngân sách</div>
+													<div>
+														<h:outputText value="#{tenant.roomCriteria.rent}">
+															<f:convertNumber pattern="¤#,##0" currencySymbol="" />
+														</h:outputText>
+														<h:outputText value=" ₫"></h:outputText>
+													</div>
+												</div>
+												<div class="badge badge-success box">
+													<div>Thời gian thuê</div>
+													<div>
+														<h:outputText value="#{tenant.roomCriteria.period}">
+														</h:outputText>
+													</div>
+												</div>
+												<div class="badge badge-light box">
+													<div>Ngày chuyển tới</div>
+													<div>
+														<h:outputText value="#{tenant.roomCriteria.movingDate}">
+															<f:convertDateTime type="date" pattern="dd-MM-yyyy" />
+														</h:outputText>
+													</div>
+												</div>
+												<div class="badge badge-info box">
+													<div>Quê quán</div>
+													<div>
+														<h:outputText value="#{tenant.strNative}">
+														</h:outputText>
+													</div>
+												</div>
+												<div class="emptybox"></div>
+												<p class="card-text">
+													<h:outputText value="#{tenant.self_expression}"></h:outputText>
+												</p>
+												<p class="card-text">
+													<small class="text-muted"> <h:outputText
+															value="#{tenant.createDate}"
+															converter="hn46.sa.converter.LastUpdatedConverter"></h:outputText>
+													</small>
+												</p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</ui:repeat>
+				</div>				
+			</div>
+		</div>		
+		</h:panelGroup>
+		<script type="text/javascript">				
+			$(document).ready(function() {
+				$('#datetimepicker1').datepicker({
+					format: 'dd/mm/yyyy',								
+				});
+				$("#datetimepicker1").datepicker("setDate", new Date());
+
+				$('#test input').attr("class", "form-control");
+			});
+
+			function setDate(){
+				$('#datetimepicker1').datepicker({
+					format: 'dd/mm/yyyy',								
+				});
+				$("#datetimepicker1").datepicker("setDate", new Date());
+			};
+
+			function initMap(){
+				var searchInput = document.getElementById('search-input');
+				var options = {
+					types : [ 'regions', 'address ', 'geocode' ]
+				};
+				var autocomplete = new google.maps.places.Autocomplete(
+						searchInput);
+				autocomplete.setComponentRestrictions({
+					'country' : 'VN'
+				});
+				autocomplete.addListener('place_changed',function() {
+					var place = autocomplete.getPlace();
+					if (!place.geometry) {
+						alert("No place");
+						return;
+					}															
+										
+					//<![CDATA[	        			
+							
+					//]]>
+				});
+			};
+		</script>
+		<script
+			src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAvf54CFkOs8IYv9qn39jyBk3pTj7rMnCE&amp;libraries=places&amp;callback=initMap"
+			async="true" defer="defer"></script>
+		<h:outputStylesheet name="css/stylesheet/rommate.css"></h:outputStylesheet>
+	</ui:define>
+</ui:composition>
+</html>

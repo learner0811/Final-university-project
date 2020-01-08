@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <style type="text/css">
+
+        @-moz-document url-prefix() {
+            li span.label-danger {
+                margin-top: -20px;
+            }
+        }
+    </style>
+
+    <ul class="sidebar-menu tree" data-widget="tree">
+        <li>
+            <p:link outcome="/index.xhtml">
+                <i class="fa fa-home"></i>
+                <span>Trang chủ</span>
+            </p:link>
+        </li>
+        <li>
+            <a href="#{request.contextPath}/docs/index.html" target="_blank">
+                <i class="fa fa-book"></i>
+                <span>Tài liệu</span>
+            </a>
+        </li>
+        <li class="treeview">
+        	<a href="#">
+                <i class="fa fa-line-chart" aria-hidden="true"></i>
+                <span>Thống kê</span>
+                <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                </span>
+            </a>
+            <ul class="treeview-menu">
+                <li>
+                    <p:link outcome="/pages/custom/statics_city.xhtml">
+                        <i class="fa fa-building-o" aria-hidden="true"></i>
+                        <span>Thống kê theo thành phố</span>
+                    </p:link>
+                </li>
+                <li>
+                    <p:link outcome="/pages/custom/statics_rent.xhtml">
+                        <i class="fa fa-money" aria-hidden="true"></i>
+                        <span>Thống kê theo giá cho thuê</span>
+                    </p:link>
+                </li>                
+         	</ul>
+        </li>
+        <li class="header">
+            Tổng quát
+        </li>
+        <li>
+            <p:link outcome="/pages/custom/user.xhtml">
+                <i class="fa fa-users" aria-hidden="true"></i>
+                <span>Quản lý người dùng</span>
+            </p:link>
+        </li>
+        <li class="treeview">
+            <a href="#">
+                <i class="fa fa-archive" aria-hidden="true"></i>
+                <span>Quản lý bài đăng</span>
+                <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                </span>
+            </a>
+        	<ul class="treeview-menu">
+                <li>
+                    <p:link outcome="/pages/custom/room_owner.xhtml">
+                        <i class="fa fa-check-circle-o" aria-hidden="true"></i>
+                        <span>Bài chia sẻ phòng</span>
+                    </p:link>
+                </li>
+                <li>
+                    <p:link outcome="/pages/custom/tenant.xhtml">
+                        <i class="fa fa-check-circle-o" aria-hidden="true"></i>
+                        <span>Bài tìm phòng</span>
+                    </p:link>
+                </li>                
+         	</ul>
+        </li>                
+    </ul>	
+
+</ui:composition>

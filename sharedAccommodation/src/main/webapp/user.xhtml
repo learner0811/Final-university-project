@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+
+<ui:composition template="template/template.xhtml">
+	<ui:define name="body">
+		<style>
+#wrapper {
+	width: 800px;
+	height: 600px;
+	margin: 0 auto;
+	background-color: #f8f9fa;
+	border-radius: 5px;
+	border: 1px solid rgba(0, 0, 0, .125);
+	margin: 10px auto 30px;
+	padding: 50px 50px 50px 71px;
+}
+;
+</style>
+		<h:form>
+			<p:growl id="growl" showDetail="true" sticky="true" />
+			<div class="emptybox5"></div>
+			<div id="wrapper">
+				<div class="container">
+					<div class="emptybox5"></div>
+					<h3 style="text-align: center;">Thông tin người dùng</h3>
+					<div class="emptybox5"></div>
+					<div class="row">
+						<div class="col-md-3">
+							<label>Tên đăng nhập</label>
+						</div>
+						<div class="col-md-9">
+							<h:inputText value="#{userController.user.account.username}"
+								readonly="true" styleClass="form-control"></h:inputText>
+						</div>
+					</div>
+					<div class="emptybox"></div>
+					<div class="row">
+						<div class="col-md-3">
+							<label>Họ</label>
+						</div>
+						<div class="col-md-9">
+							<h:inputText styleClass="form-control"
+								value="#{userController.user.lastName}" required="true"
+								requiredMessage="Không được để trống họ"></h:inputText>
+						</div>
+					</div>
+					<div class="emptybox"></div>
+					<div class="row">
+						<div class="col-md-3">
+							<label>Tên</label>
+						</div>
+						<div class="col-md-9">
+							<h:inputText styleClass="form-control"
+								value="#{userController.user.firstName}"
+								requiredMessage="Không được để trống tên"></h:inputText>
+						</div>
+					</div>
+					<div class="emptybox"></div>
+					<div class="row">
+						<div class="col-md-3">
+							<p:selectBooleanCheckbox id="passwordPnl"
+								itemLabel="Đổi mật khẩu"
+								value="#{userController.displayPasswordChange}"
+								unselectable="true">
+								<p:ajax event="change" update="changePassword"
+									listener="#{userController.passwordChangeListener}"></p:ajax>
+							</p:selectBooleanCheckbox>
+						</div>
+
+						<div class="col-md-9">
+							<h:panelGroup id="changePassword">
+								<h:inputSecret a:placeholder="Mật khẩu hiện tại"
+									value="#{userController.currentPassword}"
+									styleClass="form-control" required="true"
+									requiredMessage="Không được để trống mật khẩu"
+									disabled="#{!userController.displayPasswordChange}"></h:inputSecret>
+								<div class="emptybox"></div>
+								<h:inputSecret a:placeholder="Mật khẩu mới"
+									value="#{userController.newPassword}"
+									styleClass="form-control" required="true"
+									requiredMessage="Không được để trống mật khẩu"
+									disabled="#{!userController.displayPasswordChange}"></h:inputSecret>
+								<div class="emptybox"></div>
+								<h:inputSecret a:placeholder="nhập lại mật khẩu"
+									value="#{userController.confirmPassword}"
+									styleClass="form-control" required="true"
+									requiredMessage="Không được để trống mật khẩu"
+									disabled="#{!userController.displayPasswordChange}"></h:inputSecret>
+							</h:panelGroup>
+						</div>
+					</div>
+					<div class="emptybox"></div>
+					<div class="row">
+						<div class="emptybox"></div>
+						<p:commandLink styleClass="btn btn-success"
+							action="#{userController.changeInfo}"
+							style="margin : 0 auto; width : 100px" update="growl">
+							<h:outputText value="Lưu" />
+						</p:commandLink>
+					</div>
+				</div>
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

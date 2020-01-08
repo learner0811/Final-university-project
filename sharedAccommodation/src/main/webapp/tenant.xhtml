@@ -1,0 +1,230 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+
+<ui:composition template="template/template.xhtml">
+	<ui:define name="body">
+		<h:form>			
+			<p:growl id="growl" showDetail="true" sticky="true" /> 
+			<div class="container">
+				<div class="emptybox5"></div>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="col-md-12">
+							<h:panelGroup id="pnlRating">
+								<i class="sa-star">&nbsp;
+									<h:outputText value="#{tenantController.ratingTotal}"></h:outputText>
+								</i>							
+								<p:rating value="#{tenantController.ratingDto}" cancel="false"
+									styleClass="ml-5" style="display: inline; font-size: 1rem;">
+									<p:ajax event="rate" listener="#{tenantController.onrate}"
+										update="growl, pnlRating" />
+								</p:rating>
+							</h:panelGroup>
+						</div>
+						<div class="emptybox"></div>
+						<div class="col-md-12">
+							<figure class="figure"> <img width="400px"
+								height="300px"
+								src="images/1/#{tenantController.tenant.avatar.fileName}"
+								class="figure-img img-fluid rounded" alt="..."></img> <figcaption
+								class="figure-caption"> </figcaption> </figure>
+							<h3>
+								Xin chào, Tôi là 
+								<h:outputText value="#{tenantController.tenant.name}"></h:outputText>
+							</h3>
+						</div>
+						<div class="emptybox"></div>
+						<div class="col-md-12">
+							<p>
+								<h:outputText value="#{tenantController.tenant.self_expression}"></h:outputText>
+								.
+							</p>
+						</div>
+						<div class="emptybox"></div>
+						<div class="col-md-12">
+							<div class="fb-comments" data-href="http://localhost:8080/shared.accommodation/tenant.xhtml?id=#{tenantController.tenant.idTenant}" data-width="500px" data-numposts="5"></div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="col-md-12 table-content">
+							<h3>Tôi đang cần tìm phòng</h3>
+							<table>
+								<tr>
+									<td colspan="2">Địa điểm</td>
+									<td colspan="3" align="right"><h:outputText
+											value="#{tenantController.tenant.roomCriteria.searchLocation}"></h:outputText>
+									</td>
+								</tr>
+								<tr>
+									<td width="20%">Có thể thuê với giá</td>
+									<td width="20%" align="right"><h:outputText
+											value="#{tenantController.tenant.roomCriteria.rent}">
+											<f:convertNumber pattern="¤#,##0" currencySymbol="" />
+										</h:outputText> <h:outputText value=" ₫"></h:outputText></td>
+									<td width="*" class="space"></td>
+									<td width="20%">Thời gian ở</td>
+									<td width="20%" align="right"><h:outputText
+											value="#{tenantController.tenant.roomCriteria.period}"></h:outputText>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">Ngày chuyển tới</td>
+									<td colspan="3" align="right"><h:outputText
+											value="#{tenantController.tenant.roomCriteria.movingDate}">
+											<f:convertDateTime type="date" pattern="dd-MM-yyyy" />
+										</h:outputText></td>
+								</tr>
+							</table>
+						</div>
+						<div class="emptybox5"></div>
+						<div class="col-md-12 table-content">
+							<h3>Tôi mong muốn có bạn cùng phòng</h3>
+							<table>
+								<tr>
+									<td width="20%">Tuổi</td>
+									<td width="20%" align="right"><h:outputText
+											value="#{tenantController.tenant.roommateCriteria.age.replace(',', '->')}"></h:outputText>
+									</td>
+									<td width="*" class="space"></td>
+									<td width="20%">Giới tính</td>
+									<td width="20%" align="right"><h:outputText
+											value="#{tenantController.tenant.roommateCriteria.gender == 0 ? 'Nam' : 'Nữ'}"></h:outputText>
+									</td>
+								</tr>
+								<tr>
+									<td width="20%">Sạch sẽ</td>
+									<td width="20%" align="right"><h:outputText
+											value="#{tenantController.tenant.roommateCriteria.cleancliness == 1 ? 'Không' : 'Có'}"></h:outputText>
+									</td>
+									<td class="space" width="*"></td>
+									<td width="20%">Hút thuốc</td>
+									<td width="20%" align="right"><h:outputText
+											value="#{tenantController.tenant.roommateCriteria.smoker == 0 ? 'Không' : 'Có'}"></h:outputText>
+									</td>
+								</tr>
+								<tr>
+									<td width="20%">Tình trạng hôn nhân</td>
+									<td width="20%" align="right"><h:outputText
+											rendered="#{tenantController.tenant.roommateCriteria.civil_status == 0}"
+											value="Không yêu cầu"></h:outputText> <h:outputText
+											rendered="#{tenantController.tenant.roommateCriteria.civil_status == 1}"
+											value="Độc thân"></h:outputText> <h:outputText
+											rendered="#{tenantController.tenant.roommateCriteria.civil_status == 2}"
+											value="Kết hôn"></h:outputText></td>
+									<td class="space" width="*"></td>
+									<td width="20%">Được nuôi thú cưng</td>
+									<td width="20%" align="right"><h:outputText
+											value="#{tenantController.tenant.roommateCriteria.petAllowed == 0 ? 'Không' : 'Có'}"></h:outputText>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<div class="emptybox5"></div>
+						<div class="col-md-12">
+							<h3>Sở thích</h3>
+							<ui:repeat value="#{tenantController.interestDto}" var="interest">
+								<h4 style="display: inline-block;" class="mr-2">
+									<span class="badge badge-success"> <h:outputText
+											value="#{interest}"></h:outputText>
+									</span>
+								</h4>
+							</ui:repeat>
+						</div>
+						<div class="emptybox5"></div>
+						<div class="col-md-12">
+							<h3>Mạng xã hội của tôi</h3>
+							<div>
+								<h:panelGroup
+									rendered="#{tenantController.tenant.faceBook != ''}">
+									<a href="#{tenantController.tenant.faceBook}"
+										class="fab fa-facebook-f facebook"></a>
+									<span class="mr-3"></span>
+								</h:panelGroup>
+								<h:panelGroup
+									rendered="#{tenantController.tenant.instagram != ''}">
+									<a href="#{tenantController.tenant.instagram}"
+										class="fab fa-instagram instagram"></a>
+								</h:panelGroup>
+							</div>
+						</div>
+						<h:panelGroup rendered="#{tenantController.tenant.phone != ''}">
+							<div class="emptybpx"></div>
+							<div class="col-md-12">
+								<h3>Liên hệ với tôi</h3>
+								<div class="emptybpx"></div>
+								<i class="fas fa-mobile-alt"></i>
+								<h:outputText value="&#160;" />
+								<h:outputText value="#{tenantController.tenant.phone}"></h:outputText>
+								<h:panelGroup rendered="#{tenantController.tenant.email != ''}">
+									<span class="mr-5"></span>									
+									Hoặc
+									<span class="ml-5"></span>
+									<i class="far fa-envelope"></i>
+									<h:outputText value="&#160;" />
+									<h:outputText value="#{tenantController.tenant.email}"></h:outputText>
+								</h:panelGroup>
+							</div>
+						</h:panelGroup>
+						<div class="emptybox5"></div>
+						<div class="col-md-12">
+							<div class="profile-info">								
+								<p:commandLink styleClass="btn btn-success"
+									action="#{tenantController.openInbox}"
+									update="inbox-form:grid,growl">
+									<i class="far fa-envelope"></i>
+									<h:outputText value="&#160;" />
+									<h:outputText value="Nhắn tin cho tôi" />										
+								</p:commandLink>								
+								<h:panelGroup id="inboxPnl" style="display : none">																				
+										<!-- receiver -->
+										<h:inputText a:id="receiverId"
+											value="#{tenantController.tenant.idUser}"></h:inputText>
+										<h:inputText a:id="receiverFirstName"
+											value="#{tenantController.tenant.firstName}"></h:inputText>
+										<h:inputText a:id="receiverLastName"
+											value="#{tenantController.tenant.lastName}"></h:inputText>
+										<h:inputText a:id="receiverAvatar"
+											value="#{tenantController.tenant.avatar.fileName}"></h:inputText>
+										<p:autoUpdate />
+								</h:panelGroup>
+								<div class="emptybox5"></div>
+							</div>
+						</div>											
+					</div>
+				</div>
+			</div>
+		</h:form>
+		<div id="fb-root"></div>
+		<script>
+			function openInbox(){				      	
+		      	console.log(window.talkSession);	      			      							
+				var receiverId = $("#receiverId").val();
+				var receiverName = $("#receiverFirstName").val() + ' ' + $("#receiverLastName").val();
+				var receiverAvatar = $("#receiverAvatar").val();
+							      					      					      				      	      
+				var me = window.talkSession.me; 																     	   	   
+	     	        var other = new Talk.User({
+	     	            id: receiverId,
+	     	            name: receiverName,		      	            
+	     	          	photoUrl: "/shared.accommodation/images/1/" + receiverAvatar,
+	     	            welcomeMessage: "Hey, how can I help?"
+	     	        });
+	
+	     	      	var conversation = talkSession.getOrCreateConversation(Talk.oneOnOneId(me, other));
+	      	    conversation.setParticipant(me);
+	      	    conversation.setParticipant(other);
+	      	    var popup = window.talkSession.createPopup(conversation, { keepOpen: false });
+	      	    popup.mount({ show: false });
+	      	 	popup.show();		      	 				    
+	     	};
+			</script>
+			<script async="defer" defer="defer" crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&amp;version=v5.0&amp;appId=578333572692276&amp;autoLogAppEvents=1"></script>
+		<h:outputStylesheet name="css/stylesheet/rommate.css"></h:outputStylesheet>
+	</ui:define>
+</ui:composition>
+</html>

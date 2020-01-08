@@ -1,0 +1,424 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+<h:head>
+
+</h:head>
+<body>
+	<ui:composition template="template/template.xhtml">
+		<ui:define name="body">
+			<style>
+#map {
+	height: 300px;
+}
+</style>
+			<h:outputStylesheet name="common/bootstrap/css/tagsinput.css"></h:outputStylesheet>		
+			<div class="container-fluid">
+				<div class="emptybox5"></div>
+				<h:form>
+					<p:growl id="growl" showDetail="true" sticky="true" />  
+				</h:form>
+				<h:form>
+					<p:confirmDialog header="Warning" widgetVar="dlg" showEffect="fade"
+						hideEffect="fade" width="350px"
+						message="Bạn đang là chủ phòng. Nếu tiếp tục bài tìm bạn cùng phòng sẽ bị ẩn.">
+						<p:commandButton value="Yes" styleClass="ui-confirmdialog-yes"
+							icon="pi pi-check" action="#{postProfileController.confirmYes}"
+							oncomplete="PF('dlg').hide()" />
+						<p:commandButton value="No" styleClass="ui-confirmdialog-no"
+							icon="pi pi-times" action="#{postProfileController.redirect}"
+							oncomplete="PF('dlg').hide()" />
+					</p:confirmDialog>
+				</h:form>
+				<h:form>
+					<p:confirmDialog header="Warning" widgetVar="dlg1"
+						showEffect="fade" hideEffect="fade" width="350px"
+						message="Bạn có muốn thực hiện tác vụ">
+						<p:commandButton value="Yes" styleClass="ui-confirmdialog-yes"
+							icon="pi pi-check" action="#{postProfileController.confirmYes2}"
+							oncomplete="PF('dlg1').hide()" />
+						<p:commandButton value="No" styleClass="ui-confirmdialog-no"
+							icon="pi pi-times" oncomplete="PF('dlg1').hide()" />
+					</p:confirmDialog>
+				</h:form>
+				<h:form enctype="multipart/form-data">
+					<div class="flex-wrapper">
+						<div class="progress-bar-box ml-5">
+							<div class="emptybox"></div>
+							<ul id="progress">
+								<li>
+									<div class="node blue"></div>
+									<button type="button" class="button-text"
+										onclick="click2Scroll('profile')">
+										<span class="badget badge-pill badge-info">Thông tin cá nhân</span>
+									</button>
+								</li>
+								<li>
+									<div class="divider grey"></div>
+								</li>
+								<li>
+									<div class="node green"></div>
+									<button type="button" class="button-text"
+										onclick="click2Scroll('room_criteria')">
+										<span class="badget badge-pill badge-success">Tiêu chí phòng</span>
+									</button>
+								</li>
+								<li>
+									<div class="divider grey"></div>
+								</li>
+								<li>
+									<div class="node red"></div>
+									<button type="button" class="button-text"
+										onclick="click2Scroll('roommate_criteria')">
+										<span class="badget badge-pill badge-danger">Tiêu chí bạn cùng phòng</span>
+									</button>
+								</li>
+							</ul>
+
+							<div class="emptybox"></div>
+							<div class="emptybox"></div>
+							<div class="emptybox"></div>
+							<div style="width: 200px">
+								<h:commandButton styleClass="commandBtn btn-red btn-small"
+									value="Save" action="#{postProfileController.post_profile}">
+								</h:commandButton>
+							</div>
+						</div>
+						<div class="content-box">
+							<div id="profile" class="card">
+								<div class="card-header">
+									<h3 style="text-align: center">Thông tin cá nhân</h3>
+									<p:selectBooleanButton disabled="#{postProfileController.mode == 'insert'}" onLabel="Đóng bài" offLabel="Mở bài"
+										style="position : absolute; right : 10px; top : 15px"
+										value="#{postProfileController.closeTopic}">
+										<p:ajax listener="#{postProfileController.switchPost}" />
+									</p:selectBooleanButton>
+								</div>
+								<div class="card-body">
+									<div class="row">
+										<label for="title" class="col-md-3">Tên</label>
+										<div class="col-md-9">
+											<h:inputText styleClass="form-control"
+												value="#{postProfileController.tenant.name}"></h:inputText>
+										</div>
+									</div>
+									<div class="emptybox"></div>
+									<div class="row">
+										<label for="title" class="col-md-12">Giới tính</label>
+										<div class="col-md-12">
+											<p:selectOneRadio layout="responsive" columns="1"
+												value="#{postProfileController.tenant.gender}">
+												<f:selectItem itemLabel="Name" itemValue="0" />
+												<f:selectItem itemLabel="Nữ" itemValue="1" />
+												<f:selectItem itemLabel="Không hiên thị" itemValue="2" />
+											</p:selectOneRadio>
+										</div>
+									</div>
+									<div class="emptybox"></div>
+									<div class="row">
+										<label for="title" class="col-md-3">Quê quán</label>
+										<div class="col-md-9">
+											<h:selectOneMenu styleClass="form-control"
+												value="#{postProfileController.tenant.strNative}">
+												<f:selectItem itemValue="Không hiển thị"></f:selectItem>
+												<f:selectItems value="#{postProfileController.nativeList}"
+													var="model" itemLabel="#{model.name}"
+													itemValue="#{model.name}"></f:selectItems>
+											</h:selectOneMenu>
+										</div>
+									</div>
+									<div class="emptybox"></div>
+									<div class="row">
+										<label for="title" class="col-md-3">Số điện thoại</label>
+										<div class="col-md-9">
+											<h:inputText styleClass="form-control"
+												value="#{postProfileController.tenant.phone}"></h:inputText>
+										</div>
+									</div>
+									<div class="emptybox"></div>
+									<div class="row">
+										<label for="title" class="col-md-3">Email</label>
+										<div class="col-md-9">
+											<h:inputText styleClass="form-control"
+												value="#{postProfileController.tenant.email}"
+												validatorMessage="Invalid email format">
+												<f:validateRegex
+												pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+											</h:inputText>
+										</div>
+									</div>
+									<div class="emptybox"></div>
+									<div class="row">
+										<label for="title" class="col-md-3">Sở thích</label>
+										<div class="col-md-9">
+											<h:inputText styleClass="bootstrap-tagsinput interesting"
+												a:data-role="tagsinput"
+												value="#{postProfileController.tenant.interests}"></h:inputText>
+										</div>
+									</div>
+									<div class="emptybox"></div>
+									<div class="row">
+										<label class="col-md-3">Mạng xã hội</label>
+										<div class="col-md-9">
+											<div class="input-group mb-3">
+												<div class="input-group-prepend">
+													<span class="input-group-text"> <i
+														class="fab fa-facebook"></i>
+													</span>
+												</div>
+												<h:inputText class="form-control" a:placeholder="facebook"
+													value="#{postProfileController.tenant.faceBook}"></h:inputText>
+											</div>
+											<div class="input-group mb-3">
+												<div class="input-group-prepend">
+													<span class="input-group-text"> <i
+														class="fab fa-instagram"></i>
+													</span>
+												</div>
+												<h:inputText class="form-control" a:placeholder="Instagram"
+													value="#{postProfileController.tenant.instagram}"></h:inputText>
+											</div>
+										</div>
+									</div>
+									<div class="emptybox"></div>
+									<div class="row">
+										<label for="title" class="col-md-3">Mô tả</label>
+										<div class="col-md-9">
+											<h:inputTextarea
+												value="#{postProfileController.tenant.self_expression}"
+												rows="5" styleClass="form-control" />											
+										</div>
+									</div>
+									<div class="emptybox"></div>
+									<div class="row">
+										<label for="title" class="col-md-3">Ảnh cá nhân</label>
+										<div class="col-md-9">
+											<p:fileUpload value="#{postProfileController.avatar}"
+												mode="simple" skinSimple="true" />
+											<small class="form-text text-muted">Bạn chỉ được đăng 1 ảnh duy nhất</small>
+											<div style="clear: both"></div>
+											<h:panelGroup layout="block" rendered="#{postProfileController.mode == 'update'}">
+												<figure class="figure"> <p:graphicImage
+													width="300px" height="200px"
+													styleClass="figure-img img-fluid rounded"
+													url="/images/1/#{postProfileController.tenant.avatar.fileName}"></p:graphicImage>
+												</figure> 
+											</h:panelGroup>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="emptybox5"></div>
+							<div id="room_criteria" class="card">
+								<div class="card-header">
+									<h3 style="text-align: center">Tiêu chí phòng</h3>
+								</div>
+								<div class="card-body">
+									<div class="row">
+										<label for="title" class="col-md-3">Tên bài đăng</label>
+										<div class="col-md-9">
+											<h:inputText styleClass="form-control"
+												value="#{postProfileController.room.title}"></h:inputText>
+										</div>
+									</div>
+									<div class="emptybox"></div>
+									<div class="row">
+										<label for="title" class="col-md-3">Ngân sách</label>
+										<div class="col-md-9">
+											<p:inputNumber  decimalPlaces="0" a:id="rent"
+												value="#{postProfileController.room.rent}"></p:inputNumber>																						  										
+										</div>
+									</div>
+									<div class="emptybox"></div>
+									<div class="row">
+										<label for="title" class="col-md-3">Ngày chuyển đến</label>
+										<div class="col-md-9">
+											<div class='input-group date' id='datetimepicker1'>
+												<h:inputText type='text'
+													value="#{postProfileController.room.movingDate}"
+													class="form-control">
+													<f:convertDateTime pattern="dd/MM/yyyy" />
+												</h:inputText>
+												
+												<span class="input-group-addon"> <span
+													class="glyphicon glyphicon-calendar"></span>
+												</span>
+											</div>
+										</div>
+									</div>
+									<div class="emptybox"></div>
+									<div class="row">
+										<label for="title" class="col-md-3">Thời gian thuê</label>
+										<div class="col-md-9">
+											<h:selectOneMenu styleClass="form-control"
+												value="#{postProfileController.room.period}">
+												<f:selectItem itemValue="6 tháng" itemLabel="6 tháng" />
+												<f:selectItem itemValue="1 năm" itemLabel="1 năm" />
+												<f:selectItem itemValue="không giới hạn" itemLabel="Không giới hạn" />
+											</h:selectOneMenu>
+										</div>
+									</div>
+									<div class="emptybox"></div>
+									<div class="row">
+										<label for="title" class="col-md-3">Địa điểm tìm kiếm</label>
+										<div class="col-md-9">
+											<h:inputText styleClass="form-control" a:id="search-input"
+												value="#{postProfileController.room.searchLocation}"></h:inputText>
+											<div class="emptybox"></div>
+											<div id="map"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="emptybox5"></div>
+							<div id="roommate_criteria" class="card">
+								<div class="card-header">
+									<h3 style="text-align: center">Tiêu chí bạn cùng phòng</h3>
+								</div>
+								<div class="card-body">
+									<div class="row">
+										<label for="title" class="col-md-3">Tuổi</label>
+										<div class="col-md-9">
+											<h:outputText id="displayRange" value="Từ 0 tới 100" />
+											<p:slider for="txt6,txt7" display="displayRange"
+												style="width: 100%" range="true"
+												displayTemplate="Từ {min} tới {max}" />
+											<h:inputHidden id="txt6"
+												value="#{postProfileController.num1}" />
+											<h:inputHidden id="txt7"
+												value="#{postProfileController.num2}" />
+										</div>
+									</div>
+									<div class="emptybox"></div>
+									<div class="emptybox"></div>
+									<div class="row">
+										<label for="title" class="col-md-12">Giới tính</label>
+										<div class="col-md-5">
+											<p:selectOneRadio id="customRadio"
+												value="#{postProfileController.roommate.gender}"
+												layout="responsive" columns="1">
+												<f:selectItem itemLabel="Nam" itemValue="0" />
+												<f:selectItem itemLabel="Nữ" itemValue="1" />
+												<f:selectItem itemLabel="Không yêu cầu" itemValue="2" />
+											</p:selectOneRadio>
+										</div>
+									</div>
+									<div class="emptybox"></div>
+									<div class="row">
+										<label for="title" class="col-md-12">Sạch sẽ</label>
+										<div class="col-md-8">
+											<p:selectOneRadio layout="responsive" columns="1"
+												value="#{postProfileController.roommate.cleancliness}">
+												<f:selectItem itemLabel="Sạch" itemValue="0" />
+												<f:selectItem
+													itemLabel="Trung bình"
+													itemValue="Không quan trọng" />
+												<f:selectItem itemLabel="Không yêu cầu" itemValue="1" />
+											</p:selectOneRadio>
+										</div>
+									</div>
+									<div class="emptybox"></div>
+									<div class="row">
+										<label for="title" class="col-md-12">Hút thuốc</label>
+										<div class="col-md-8">
+											<p:selectOneRadio layout="responsive" columns="1"
+												value="#{postProfileController.roommate.smoker}">
+												<f:selectItem itemLabel="Có" itemValue="0" />
+												<f:selectItem itemLabel="Không" itemValue="1" />
+											</p:selectOneRadio>
+										</div>
+									</div>
+									<div class="emptybox"></div>
+									<div class="row">
+										<label for="title" class="col-md-12">Tình trạng hôn nhân</label>
+										<div class="col-md-5">
+											<p:selectOneRadio layout="responsive" columns="1"
+												value="#{postProfileController.roommate.civil_status}">
+												<f:selectItem itemLabel="Độc thân" itemValue="1" />
+												<f:selectItem itemLabel="Kết hôn" itemValue="2" />
+												<f:selectItem itemLabel="Không yêu cầu" itemValue="0" />
+											</p:selectOneRadio>
+										</div>
+									</div>
+									<div class="emptybox"></div>
+									<div class="row">
+										<label for="title" class="col-md-12">Được nuôi thú cưng</label>
+										<div class="col-md-8">
+											<p:selectOneRadio layout="responsive" columns="1"
+												value="#{postProfileController.roommate.petAllowed}">
+												<f:selectItem itemLabel="Có" itemValue="1" />
+												<f:selectItem itemLabel="Không"
+													itemValue="0" />
+											</p:selectOneRadio>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</h:form>
+			</div>
+			<script>
+				$( document ).ready(function() {					
+					$('#datetimepicker1').datepicker({
+						format: 'dd/mm/yyyy',									
+					});
+					$("#datetimepicker1").datepicker("setDate", new Date());
+
+					$(window).keydown(function(event){
+						var isTagInput = event.target.parentElement.getAttribute("class");
+						if (isTagInput.includes('bootstrap-tagsinput'))
+							return true;
+					    if(event.keyCode == 13) {
+					      event.preventDefault();
+					      return false;
+					    }
+					});
+
+					$("#rent input[type='text']").attr("class", "form-control");								
+				});				
+				function click2Scroll(element){
+					element = "#" + element;								
+					$('html,body').animate({					
+				        scrollTop: $(element).offset().top},
+				    'slow');
+				}
+				var map;
+	      		function initMap() {
+					map = new google.maps.Map(document.getElementById('map'), {
+		          		center: {lat: 21.0278, lng: 105.8342},
+		          		zoom: 8,
+		          		zoomControl: true,
+		          		disableDefaultUI: true
+		        	});
+
+					var searchInput = document.getElementById('search-input');					
+		        	var autocomplete = new google.maps.places.Autocomplete(searchInput);	        	
+		        	autocomplete.bindTo('bounds', map);
+		        	autocomplete.setFields(['address_components', 'geometry', 'icon', 'name']);
+		        	var marker = new google.maps.Marker({
+		                map: map,
+		                anchorPoint: new google.maps.Point(0, -29)
+		            });
+		        	autocomplete.setComponentRestrictions({'country': 'VN'});
+		        	autocomplete.addListener('place_changed', function() {	
+		        		var place = autocomplete.getPlace();
+		        		marker.setPosition(place.geometry.location);
+		                marker.setVisible(true);
+		        	});
+	      		}
+			</script>
+			<script
+				src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAvf54CFkOs8IYv9qn39jyBk3pTj7rMnCE&amp;libraries=places&amp;callback=initMap"
+				async="true" defer="defer"></script>
+			<h:outputScript name="common/bootstrap/js/tagsinput.js"></h:outputScript>
+		</ui:define>
+	</ui:composition>
+</body>
+</html>

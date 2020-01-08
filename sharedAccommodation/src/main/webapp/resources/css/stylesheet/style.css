@@ -1,0 +1,228 @@
+/* Customize the label (the container) */
+.ckb-container {
+  display: block;
+  position: relative;
+  padding-left: 25px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; }
+
+/* Hide the browser's default checkbox */
+.ckb-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0; }
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 5px;
+  left: 0;
+  height: 15px;
+  width: 15px;
+  background-color: #eee; }
+
+/* On mouse-over, add a grey background color */
+.ckb-container:hover input ~ .checkmark {
+  background-color: #ccc; }
+
+/* When the checkbox is checked, add a blue background */
+.ckb-container input:checked ~ .checkmark {
+  background-color: #2196F3; }
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none; }
+
+/* Show the checkmark when checked */
+.ckb-container input:checked ~ .checkmark:after {
+  display: block; }
+
+/* Style the checkmark/indicator */
+.ckb-container .checkmark:after {
+  left: 5px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg); }
+
+.node {
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  transition: all 1000ms ease; }
+
+.activated {
+  box-shadow: 0px 0px 3px 2px rgba(194, 255, 194, 0.8); }
+
+.divider {
+  height: 40px;
+  width: 2px;
+  margin-left: 4px;
+  transition: all 800ms ease; }
+
+#progress li p {
+  display: inline-block;
+  margin-left: 25px; }
+
+#progress li {
+  list-style: none;
+  line-height: 1px; }
+
+.blue {
+  background-color: #52a5ff; }
+
+.green {
+  background-color: #5cb85c; }
+
+.red {
+  background-color: #ff9494; }
+
+.grey {
+  background-color: #c9c9c9; }
+
+/*----------------------*/
+/*-------COLOR----------*/
+.navbar-custom {
+  background-color: #FBFBFB !important; }
+
+.nav-item {
+  padding: 0 10px; }
+
+.login-dropdown {
+  width: 300px;
+  right: auto;
+  left: 50%;
+  -webkit-transform: translate(-50%, 0);
+  -o-transform: translate(-50%, 0);
+  transform: translate(-50%, 0);
+  border-radius: 0px; }
+
+.login-dropdown > div {
+  padding: 20px; }
+
+.commandBtn {
+  background: #FFFFFF;
+  border: solid 1px #cdcdcd;
+  border-radius: 5px;
+  display: block;
+  text-align: center; }
+
+.btn-small {
+  font-size: 0.8rem;
+  padding: 5px 7px;
+  width: 100%; }
+
+.btn-big {
+  font-size: 1.3rem;
+  padding: 10px 5px;
+  width: 100%; }
+
+.btn-red {
+  color: #fff;
+  background-color: #FF3A3A; }
+
+.emptybox {
+  width: 100%;
+  height: 10px; }
+
+.emptybox5 {
+  width: 100%;
+  height: 50px; }
+
+.popup_header {
+  text-align: center;
+  padding: 20px 10px;
+  padding-top: 30px;
+  padding-bottom: 0;
+  font-size: 1.4em;
+  color: black; }
+
+.search-wrapper {
+  display: flex;
+  width: 100%;
+  align-items: stretch; }
+
+#searchArea {
+  width: 100%;
+  clear: both; }
+
+#searchContent {
+  min-width: 60%;
+  max-width: 60%;
+  height : 500px;
+  overflow-y: scroll;
+  overflow-x: hidden; }
+
+#mapSidebar {
+  min-width: 40%;
+  max-width: 40%;
+  min-height: 70vh;  
+  position: sticky;
+  top: 0;
+  right: 0;
+  overflow-x: hidden; 
+ }
+
+#mapSidebar.active {
+  display: none; }
+
+#searchContent.active {
+  min-width: 100%; }
+
+.bg-nav {
+  background-color: #FFFFFF; }
+
+.flex-wrapper {
+  width: 100%;
+  display: flex; }
+
+.progress-bar-box {
+  width: 30%;
+  position: sticky;
+  height: 100vh;
+  overflow: auto;
+  top: 5%; }
+
+.content-box {
+  width: 70%; }
+
+.accordion-header {
+  background-color: #eee;
+  color: #444;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  text-align: left;
+  border: none;
+  outline: none;
+  transition: 0.4s; }
+
+.button-text {
+  border: none;
+  background: none;
+  outline: none; }
+
+.button-text:focus {
+  outline: 0; }
+
+.search-item-box {
+  padding: 15px 25px; }
+
+.carousel-item img {
+  max-height: 300px;
+  width: 300px; }
+
+/*# sourceMappingURL=style.css.map */

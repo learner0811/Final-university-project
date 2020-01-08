@@ -1,0 +1,182 @@
+@import "checkbox.scss";
+@import "progress_bar.scss";
+
+/*----------------------*/
+/*-------COLOR----------*/
+$navbar-background : #FBFBFB;
+$primary-color : #FFFFFF;
+$white : #FFFFFF;
+$black : #000000;
+$btn-red : #FF3A3A;
+$grey:  #777;
+$grey2: #dfe3e4;
+$blue:  #2183dd;
+$green: #009900;
+$white: #fff;
+
+
+@mixin center-div{
+	-webkit-transform: translate(-50%, 0);
+    -o-transform: translate(-50%, 0);
+    transform: translate(-50%, 0);
+    border-radius: 0px;
+}
+
+.container-fluid {
+	
+}
+
+.navbar-custom {
+	background-color: $navbar-background !important;		
+}
+
+.nav-item {
+	padding: 0 10px;
+}
+
+.login-dropdown{
+	width: 300px;
+	right: auto;
+    left: 50%;
+    @include  center-div;
+
+}
+
+.login-dropdown > div{
+	padding :20px;
+}
+
+.commandBtn{	
+	background:$primary-color; 
+	border : solid 1px #cdcdcd;   
+    border-radius: 5px;	
+    display: block;
+    text-align: center;    
+}
+
+.btn-small{
+	font-size: 0.8rem;
+    padding: 5px 7px;
+    width: 100%;
+}
+
+.btn-big{
+	font-size: 1.3rem;
+    padding: 10px 5px;
+    width: 100%;	
+}
+
+.btn-red{
+	color: $white;
+	background-color : $btn-red;	
+}
+
+
+.emptybox{
+	width: 100%;
+	height: 10px;		
+}
+
+.emptybox5{
+	width: 100%;
+	height: 50px;		
+}
+
+.popup_header{
+	text-align: center;
+    padding: 20px 10px;
+    padding-top: 30px;
+    padding-bottom: 0;
+    font-size: 1.4em;    
+    color: black;
+}
+
+.search-wrapper{
+	display: flex;
+    width: 100%;
+    align-items: stretch;
+}
+
+#searchArea{
+	width: 100%;
+	clear: both;
+}
+
+#searchContent{
+	min-width: 60%;
+	max-width: 60%;
+	overflow: scroll;
+	overflow-x: hidden;
+}
+
+#mapSidebar{
+	min-width: 40%;
+    max-width: 40%;
+    min-height: 70vh;
+    position: sticky;
+    top: 0;
+
+}
+
+#mapSidebar.active {
+    display: none;
+}
+
+#searchContent.active{
+	min-width: 100%;
+}
+
+.bg-nav{
+	background-color: $primary-color;
+}
+
+@mixin bg-control-tab{
+	background-color : #F3F3F3;
+}
+
+.flex-wrapper{
+	width: 100%;
+	display: flex;	
+}
+
+.progress-bar-box{
+	width: 30%;
+	position: sticky;
+	height: 100vh;
+	overflow: auto;
+	top: 5%;
+}
+
+.content-box{
+	width: 70%;
+}
+
+.accordion-header{
+	background-color: #eee;
+  	color: #444;
+  	cursor: pointer;
+  	padding: 18px;
+  	width: 100%;
+  	text-align: left;
+  	border: none;
+  	outline: none;
+  	transition: 0.4s;
+}
+
+.button-text{
+	border : none;	
+	background : none;
+	outline: none;
+}
+
+.button-text:focus {outline:0;}
+
+.search-item-box{
+	padding : 15px 25px;		
+}
+
+.carousel-item img{
+	max-height: 300px;
+	width: 300px;
+}
+

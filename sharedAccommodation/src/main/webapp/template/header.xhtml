@@ -1,0 +1,239 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+<ui:composition>
+	<script>	
+		(function(t,a,l,k,j,s){
+		s=a.createElement('script');s.async=1;s.src="https://cdn.talkjs.com/talk.js";a.head.appendChild(s)
+		;k=t.Promise;t.Talk={v:2,ready:{then:function(f){if(k)return new k(function(r,e){l.push([f,r,e])});l
+		.push([f])},catch:function(){return kamp;amp;new k()},c:l}};})(window,document,[]);	
+	</script>
+	<h:panelGroup id="navbar">
+		<nav
+			class="navbar navbar-expand-sm navbar-light bg-light navbar-custom ">
+		<a class="navbar-brand" href="/shared.accommodation/index.xhtml">
+			<img src="http://localhost:8080/shared.accommodation/images/3/logo.png" width="150px" height="50px" alt="" />
+		</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse"
+			data-target="#myNavbar" aria-controls="myNavba" aria-expanded="false"
+			aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+
+		<div class="collapse navbar-collapse" id="myNavbar">
+			<ul class="nav navbar-nav ml-auto">
+				<h:panelGroup rendered="#{headerController.sessionBean != null}">
+					<li class="nav-item dropdown"><a
+						class="nav-link dropdown-toggle" href="#" id="dropdownUser"
+						role="button" data-toggle="dropdown" aria-haspopup="true"
+						aria-expanded="false"> <h:outputText
+								value="#{headerController.sessionBean.firstName}"></h:outputText>
+							<h:outputText value=" "></h:outputText> <h:outputText
+								value="#{headerController.sessionBean.lastName}"></h:outputText>
+					</a>
+						<div class="dropdown-menu" aria-labelledby="dropdownUser">
+							<h:form>
+								<a class="dropdown-item fa fa-bed"
+									href="#{request.contextPath}/post_room.xhtml">&nbsp;&nbsp;Chia sẻ phòng</a>
+								<a class="dropdown-item fas fa-id-badge"
+									href="#{request.contextPath}/post_profile.xhtml">&nbsp;&nbsp;Tìm phòng</a>
+								<a class="dropdown-item fas fa-user-cog"
+									href="#{request.contextPath}/user.xhtml">&nbsp;&nbsp;Người dùng</a>
+								<h:commandLink actionListener="#{headerController.logout()}"
+									value="&nbsp;&nbsp;Logout" action="#"
+									styleClass="dropdown-item fas fa-sign-out-alt"></h:commandLink>
+							</h:form>
+						</div></li>
+					<li class="nav-item dropdown"><a class="nav-link"
+						href="message.xhtml"> <i class="far fa-envelope"></i> Messages
+							<span class="badge badge-light" id="notifier-badge"></span>
+					</a></li>
+				</h:panelGroup>
+				<li class="nav-item active"><a class="nav-link"
+					href="#{request.contextPath}/index.xhtml"><i
+						class="fa fa-home fa-wd"></i>&nbsp;Trang chủ</a></li>
+				<li class="nav-item"><a class="nav-link"
+					href="#{request.contextPath}/search.xhtml"><i
+						class="fa fa-search fa-wd"></i>&nbsp;Tìm kiếm</a></li>
+				<li class="nav-item"><a class="nav-link"
+					href="#{request.contextPath}/search_tenant.xhtml"><i
+						class="fa fa-user"></i>&nbsp;Bạn cùng phòng</a></li>
+				<h:panelGroup rendered="#{headerController.sessionBean == null}">
+					<li class="nav-item dropdown"><a
+						class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+						role="button" data-toggle="dropdown" aria-haspopup="true"
+						aria-expanded="false"><i class="fa fa-sign-in"></i>&nbsp;
+							Đăng nhập </a>
+						<div class="dropdown-menu login-dropdown"
+							aria-labelledby="navbarDropdown">
+							<div class="col-md-12">
+								<h:form>
+									<p:growl id="growl" showDetail="true" sticky="true" />
+									<div class="form-group">
+										<label>Tài khoản</label>
+										<h:inputText id="username" styleClass="form-control"
+											value="#{loginController.account.username}" required="true"></h:inputText>
+										<h:message for="username" style="color:red" />
+									</div>
+									<div class="form-group">
+										<label>Mật khẩu</label>
+										<h:inputSecret styleClass="form-control"
+											value="#{loginController.account.password}"></h:inputSecret>
+									</div>
+									<div style="overflow: auto">
+										<div style="float: left; width: 50%">
+											<label class="ckb-container"> <h:selectBooleanCheckbox></h:selectBooleanCheckbox>
+												<span class="checkmark"></span> Lưu đăng nhập
+											</label>
+										</div>
+										<div style="float: right; display: inline-block">
+											<p:commandLink styleClass="commandBtn btn-small"
+												value="Đăng nhập" action="#{loginController.doLogin}"
+												update="growl,navbar,userInfoPnl"></p:commandLink>
+										</div>
+									</div>
+									<div class="emptybox"></div>
+									<div style="text-align: center">
+										<span>Hoặc</span>
+									</div>
+									<div style="margin-top: 3px">
+										<h:commandButton styleClass="commandBtn btn-red btn-small"
+											value="Đăng nhập với google"></h:commandButton>
+									</div>
+									<div class="emptybox"></div>
+									<div class="emptybox"></div>
+									<h:commandLink value="Quên mật khẩu"></h:commandLink>
+								</h:form>
+							</div>
+						</div></li>
+				</h:panelGroup>
+				<li class="nav-item"><a class="nav-link" href="#"
+					data-toggle="modal" data-target="#registerModal"> <i
+						class="fa fa-user-plus"></i>&nbsp;Đăng ký
+				</a></li>
+			</ul>
+		</div>
+		</nav>
+
+		<!-- Modal -->
+		<div class="modal fade" id="registerModal" tabindex="-1" role="dialog"
+			aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="ml-auto mr-3 mt-2">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="popup_header">Đăng ký tài khoản</div>
+						<div class="emptybox"></div>
+						<div class="col-md-12">
+							<h:form>
+								<div class="form-group">
+									<h:inputText styleClass="form-control"
+										pt:placeholder="Tên"
+										value="#{registerController.user.firstName}">
+									</h:inputText>
+								</div>
+								<div class="form-group">
+									<h:inputText styleClass="form-control"
+										pt:placeholder="Họ"
+										value="#{registerController.user.lastName}">
+									</h:inputText>
+								</div>
+								<div class="form-group">
+									<h:inputText id="username" styleClass="form-control"
+										pt:placeholder="Tài khoản"
+										value="#{registerController.user.account.username}"
+										required="true">
+									</h:inputText>
+									<h:message for="username"></h:message>
+								</div>
+								<div class="form-group">
+									<h:inputSecret styleClass="form-control"
+										pt:placeholder="Mật khẩu"
+										value="#{registerController.user.account.password}"></h:inputSecret>
+								</div>
+								<div style="overflow: auto">
+									<div>
+										<label class="ckb-container"> <h:selectBooleanCheckbox
+												value="#{registerController.termCheck}"></h:selectBooleanCheckbox>
+											<span class="checkmark"></span> Tôi đồng ý với điều khoản
+										</label>
+									</div>
+								</div>
+								<div class="emptybox"></div>
+								<div style="margin-top: 3px">
+									<h:commandButton styleClass="commandBtn btn-red btn-small"
+										value="Đăng ký" action="#{registerController.register}"></h:commandButton>
+								</div>
+								<div class="emptybox"></div>
+							</h:form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</h:panelGroup>
+	<h:panelGroup style="display : none" id="userInfoPnl">
+		<h:inputText a:id="userId"
+			value="#{headerController.conversation.pa.id}"></h:inputText>
+		<h:inputText a:id="firstName"
+			value="#{headerController.conversation.pa.firstName}"></h:inputText>
+		<h:inputText a:id="lastName"
+			value="#{headerController.conversation.pa.lastName}"></h:inputText>
+		<h:inputText a:id="avatar"
+			value="#{headerController.conversation.pa.fileName}"></h:inputText>
+	</h:panelGroup>
+	<script>
+	
+	$( document ).ready(function() {
+		createTalkSession();				
+	});
+	
+	function createTalkSession(){
+  		Talk.ready.then(function() {
+			var myId = $("#userId").val();
+      		var myName = $("#firstName").val() + ' ' + $("#lastName").val();
+      		var myavatar = $("#avatar").val();			
+			 
+  	        var me = new Talk.User({
+  	            id: myId,
+  	            name: myName,		      	            
+  	            photoUrl: "/shared.accommodation/images/1/" + myavatar,
+  	            welcomeMessage: "Hey there! How are you? :-)"
+  	        });
+  	        window.talkSession = new Talk.Session({
+  	            appId: "tQPdj4KX",
+  	            me: me
+  	        });
+  	       	       
+
+  	      	window.talkSession.unreads.on("change", function(conversationIds) {
+			    var amountOfUnreads = conversationIds.length;
+			    // update the text and hide the badge if there are
+			    // no unreads.
+			    $("#notifier-badge")
+			        .text(amountOfUnreads)
+			        .toggle(amountOfUnreads > 0); 
+				    			    
+			});
+
+			if (window.location.href.includes('message.xhtml')){
+				var inbox = window.talkSession.createInbox();
+		    	inbox.mount(document.getElementById("talkjs-container"));
+			}
+  		});
+	};
+	</script>
+</ui:composition>
+</html>

@@ -1,0 +1,44 @@
+@charset "UTF-8";
+
+.title-container {	
+	background-color: white;
+	border-bottom: 1px solid lightgray;
+}
+
+.table-content table {
+	width: 100%;
+}
+
+.table-content table td {
+	color: black;
+	padding: 10px 0;
+	border-bottom: 1px solid lightgray;
+	font-size: 16px;
+	overflow: hidden;
+}
+
+.table-content table .space {
+	border-bottom: none;
+	width: 30px;
+}
+
+.profile-userpic img {
+  float: none;
+  margin: 0 auto;
+  width: 50%;
+  height: 50%;
+  -webkit-border-radius: 50% !important;
+  -moz-border-radius: 50% !important;
+  border-radius: 50% !important;
+  display: block;  
+}
+
+.profile-info{
+	text-align: center;
+	padding: 0px 50px;
+}
+
+#collapse-btn{
+	text-decoration: none;
+	color : #000;
+}

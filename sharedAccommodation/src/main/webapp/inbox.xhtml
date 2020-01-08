@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui" xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+<h:head>
+	<h:outputStylesheet name="css/stylesheet/message.css"></h:outputStylesheet>
+</h:head>
+<h:body>
+	<div class="inbox-wrapper" style="display: none">
+		<h:form id="inbox-form">
+			<div class="messaging">
+				<div class="inbox_msg">
+					<div class="mesgs">
+						<div class="msg_header">
+							<h6>Message box</h6>
+							<i class="fas fa-times close-btn"></i>
+						</div>
+						<h:panelGroup id="grid">
+							<div class="msg_history">
+								<ui:repeat var="message"
+									value="#{messageController.conversation.messages}">
+									<h:panelGroup
+										rendered="#{message.creator.idUser != messageController.sender.idUser}">
+										<div class="incoming_msg">
+											<div class="incoming_msg_img">
+												<img src="https://ptetutorials.com/images/user-profile.png"
+													alt="sunil"></img>
+											</div>
+											<div class="received_msg">
+												<div class="received_withd_msg">
+													<p>
+														<h:outputText value="#{message.text_message}"></h:outputText>
+													</p>
+													<span class="time_date"> <h:outputText
+															value="#{message.createDate}"
+															converter="hn46.sa.converter.MessageTimeConverter"></h:outputText>
+													</span>
+												</div>
+											</div>
+										</div>
+									</h:panelGroup>
+									<h:panelGroup
+										rendered="#{message.creator.idUser == messageController.sender.idUser}">
+										<div class="outgoing_msg">
+											<div class="sent_msg">
+												<p>
+													<h:outputText value="#{message.text_message}"></h:outputText>
+												</p>
+												<span class="time_date"> <h:outputText
+														value="#{message.createDate}"
+														converter="hn46.sa.converter.MessageTimeConverter"></h:outputText>
+												</span>
+											</div>
+										</div>
+									</h:panelGroup>
+								</ui:repeat>
+							</div>
+							<div class="type_msg">
+								<div class="input_msg_write">
+									<h:inputText type="text" syleClass="write_msg"
+										a:placeholder="Type a message"
+										value="#{messageController.comingMessage}" />
+									<p:commandLink update="grid" class="msg_send_btn"
+										actionListener="#{messageController.send}">
+										<i class="far fa-paper-plane" style="padding: 7px"></i>
+									</p:commandLink>
+								</div>
+							</div>
+						</h:panelGroup>
+					</div>
+				</div>
+			</div>
+		</h:form>
+	</div>
+	<script>		
+		$(".close-btn").on('click', function(){			
+			hide();
+		});
+
+		function hide(){
+			$(".inbox-wrapper").attr('style', 'display : none');
+		}
+
+		function show(){
+			$(".inbox-wrapper").attr('style', 'display : block');
+			console.log($("#message-box"));
+			$("#message-box").removeClass('show');
+		}
+	</script>
+</h:body>
+
+</html>

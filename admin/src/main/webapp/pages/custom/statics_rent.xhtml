@@ -1,0 +1,153 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	xmlns:f="http://xmlns.jcp.org/jsf/core" template="#{layoutMB.template}">
+
+	<ui:define name="head-end">
+		<style type="text/css">
+.ui-datatable .ui-datatable-header {
+	text-align: right !important;
+}
+
+body div.ui-datalist-content {
+	border: none;
+	text-align: center;
+}
+
+body div.ui-datalist .ui-datalist-data .ui-datalist-item {
+	font-weight: normal;
+}
+
+body div.ui-datalist .ui-paginator {
+	border: none !important;
+}
+
+#visitorsByMonthChart {
+	height: 200px;
+}
+
+#visitorsByPageChart {
+	height: 400px;
+}
+
+#visitorsByCountryChart {
+	height: 450px;
+}
+
+.ui-panel .leaflet-container {
+	width: 100%;
+	height: 500px
+}
+
+@media ( max-width : 1280px) {
+	#visitorsByPageChart {
+		height: 325px;
+	}
+	.ui-panel .leaflet-container {
+		width: 100%;
+		height: 400px
+	}
+}
+
+@media ( max-width : 768px) {
+	#visitorsByMonthChart {
+		height: 250px;
+	}
+	#visitorsByPageChart {
+		height: 275px;
+	}
+	#visitorsByCountryChart {
+		height: 350px;
+	}
+	.ui-panel .leaflet-container {
+		height: 300px
+	}
+}
+
+@media ( max-width : 640px) {
+	#visitorsByMonthChart {
+		height: 275px;
+	}
+	#visitorsByPageChart {
+		height: 200px;
+	}
+	#visitorsByCountryChart {
+		height: 250px;
+	}
+	.ui-panel .leaflet-container {
+		height: 250px
+	}
+}
+
+.month-picker-month-table a.ui-state-highlight {
+	background: #fff;
+	color: #444;
+}
+
+.month-picker-month-table a.ui-state-highlight>span {
+	font-weight: bold;
+}
+
+.month-picker-month-table a.ui-state-active {
+	background: #337ab7;
+	color: #fff;
+}
+</style>
+		<h:outputStylesheet library="css" name="leaflet.css" />
+		<h:outputStylesheet library="css" name="markercluster.default.css" />
+		<h:outputStylesheet library="css" name="markercluster.css" />
+		<h:outputStylesheet library="css" name="monthpicker.min.css" />
+
+	</ui:define>
+
+	<ui:define name="title">
+        Thống kế
+    </ui:define>
+
+	<ui:define name="body">
+		<adm:breadcrumb title="Analytics" />
+		<adm:sidebar collapsed="true" />
+
+		<!-- <h:form prependId="false">
+			<p:remoteCommand name="updateStatistics"
+				action="#{analyticsMB.updateStatistics}" process="@form"
+				update="@(.ui-panel, .analyticsScripts, .statsDate)"
+				oncomplete="initStats()" />
+			<div class="ui-g" style="text-align: center; font-size: 1.2em">
+				<div class="ui-g-12">
+					<p:outputLabel for="statsDate"
+						value="Chose month to view statistics" />
+				</div>
+				<div class="ui-g-12">
+					<p:inputText id="statsDate" styleClass="statsDate" readonly="true"
+						placeholder="Click to select month" style="cursor: pointer"
+						value="#{analyticsMB.monthYearSelection}" />
+					<p:spacer width="5" />
+					<p:commandButton value="All times"
+						action="#{analyticsMB.updateStatistics}" style="font-size: 16px"
+						update="@(.ui-panel, .analyticsScripts, .statsDate)"
+						styleClass="btn-danger" process="@this" oncomplete="initStats()">
+						<p:confirm header="Confirmation"
+							message="Load ALL times statistics?" icon="ui-icon-alert" />
+					</p:commandButton>
+				</div>
+			</div>
+
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
+				styleClass="box-danger">
+				<p:commandButton value="Yes" type="button"
+					styleClass="btn-primary ui-confirmdialog-yes" icon="fa fa-check" />
+				<p:commandButton value="No" type="button"
+					styleClass="btn-danger ui-confirmdialog-no" icon="fa fa-close" />
+			</p:confirmDialog>
+		</h:form> -->
+		<p:separator />
+		<p:panel styleClass="card box-success" header="Bảng thống kê"
+			toggleable="true">			
+			<p:chart type="pie" model="#{chartController.pieModel1}" style="width:400px;height:300px"/>			
+		</p:panel>
+		
+	</ui:define>
+</ui:composition>
